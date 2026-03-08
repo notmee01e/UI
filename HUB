@@ -1183,7 +1183,6 @@ function Acrylic.init()
 	end
 end
 
-return Acrylic
 
 local Components = {
 	Assets = {
@@ -1193,6 +1192,8 @@ local Components = {
 		Restore = "rbxassetid://9886659001",
 	},
 }
+
+return Acrylic
 
 Components.Element = (function()
 	local New = Creator.New
