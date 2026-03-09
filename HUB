@@ -1,11 +1,4 @@
--- ╔══════════════════════════════════════════════════════════╗
--- ║          ⚡ VIOLET THUNDER UI LIBRARY ⚡                  ║
--- ║       Animated • Glowing • Thunder-Themed               ║
--- ╚══════════════════════════════════════════════════════════╝
 
---// ─────────────────────────────────────────────────────────
---//  🎨 VIOLET THUNDER THEME CONFIGURATION
---// ─────────────────────────────────────────────────────────
 local Config = {
     main_color  = Color3.fromRGB(138, 43, 226),  -- ⚡ vivid violet
     min_size    = Vector2.new(420, 320),
@@ -28,17 +21,12 @@ local Config = {
     tween_time  = 0.12,
 }
 
---// ─────────────────────────────────────────────────────────
---//  CLEANUP: destroy any previous instance of this GUI
---// ─────────────────────────────────────────────────────────
 do
     local existing = game:GetService("CoreGui"):FindFirstChild("imgui")
     if existing then existing:Destroy() end
 end
 
---// ─────────────────────────────────────────────────────────
---//  SERVICES
---// ─────────────────────────────────────────────────────────
+
 local UserInputService = game:GetService("UserInputService")
 local TweenService     = game:GetService("TweenService")
 local RunService       = game:GetService("RunService")
@@ -46,19 +34,11 @@ local Players          = game:GetService("Players")
 local LocalPlayer      = Players.LocalPlayer
 local Mouse            = LocalPlayer:GetMouse()
 
---// ─────────────────────────────────────────────────────────
---//  ROOT GUI
---// ─────────────────────────────────────────────────────────
+
 local Root = Instance.new("ScreenGui")
 Root.Name   = "imgui"
 Root.Parent = game:GetService("CoreGui")
 
---// ─────────────────────────────────────────────────────────
---//  ⚡ THUNDER ANIMATION ENGINE
---//  Draws procedural lightning bolts on a fullscreen canvas
---//  Runs in a background loop — automatically stops when
---//  the GUI is destroyed.
---// ─────────────────────────────────────────────────────────
 local ThunderCanvas = Instance.new("Frame")
 ThunderCanvas.Name                   = "ThunderCanvas"
 ThunderCanvas.Size                   = UDim2.fromScale(1, 1)
