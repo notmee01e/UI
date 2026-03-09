@@ -995,6 +995,140 @@ function Library:AddWindow(title, options)
         win.ImageTransparency = options.background_transparency
         applyColor(win, options.background, 45)
 
+        --// ── 🌌 ANIMATED BACKGROUND LAYER ────────────────
+        -- A semi-transparent canvas that sits behind all content
+        -- and shows drifting aurora bands + floating glow orbs
+        local bgCanvas              = Instance.new("Frame")
+        bgCanvas.Name               = "BgCanvas"
+        bgCanvas.Size               = UDim2.new(1, 0, 1, 0)
+        bgCanvas.BackgroundColor3   = Color3.fromRGB(10, 4, 22)
+        bgCanvas.BackgroundTransparency = 0.15
+        bgCanvas.BorderSizePixel    = 0
+        bgCanvas.ZIndex             = 1
+        bgCanvas.ClipsDescendants   = true
+        bgCanvas.Parent             = win
+
+        -- Aurora sweep bands (horizontal gradient bars that drift slowly)
+        local auroraColors = {
+            Color3.fromRGB(60, 10, 130),    -- deep purple band
+            Color3.fromRGB(30, 0, 100),     -- near-black purple
+            Color3.fromRGB(80, 20, 160),    -- mid violet band
+            Color3.fromRGB(20, 50, 140),    -- blue-purple band
+        }
+        for i = 1, 4 do
+            local band              = Instance.new("Frame")
+            band.Name               = "AuroraBand"..i
+            band.Size               = UDim2.new(1.4, 0, 0, math.random(30, 60))
+            band.Position           = UDim2.new(-0.2, 0, (i - 1) * 0.26, 0)
+            band.BackgroundColor3   = auroraColors[i]
+            band.BackgroundTransparency = 0.72
+            band.BorderSizePixel    = 0
+            band.ZIndex             = 1
+            band.Rotation           = math.random(-8, 8)
+            band.Parent             = bgCanvas
+
+            -- Slow drift animation — each band drifts at different speed/direction
+            local function driftBand()
+                local speed   = math.random(40, 90) / 10   -- 4–9 seconds
+                local targetY = (i - 1) * 0.26 + (math.random() > 0.5 and 0.08 or -0.08)
+                TweenService:Create(band,
+                    TweenInfo.new(speed, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    {
+                        Position = UDim2.new(-0.2, 0, targetY, 0),
+                        Rotation = math.random(-10, 10),
+                        BackgroundTransparency = math.random(65, 82) / 100,
+                    }
+                ):Play()
+                task.delay(speed, driftBand)
+            end
+            task.delay(i * 0.3, driftBand)
+        end
+
+        -- Floating glow orbs — soft circles that wander around the bg
+        local orbColors = {
+            Color3.fromRGB(100, 20, 200),
+            Color3.fromRGB(0,   80, 220),   -- blue orb
+            Color3.fromRGB(130, 40, 255),
+            Color3.fromRGB(20, 100, 200),   -- cyan-blue orb
+        }
+        task.spawn(function()
+            local orbAlive = true
+            bgCanvas.AncestryChanged:Connect(function()
+                if not bgCanvas.Parent then orbAlive = false end
+            end)
+
+            while orbAlive do
+                task.wait(math.random(8, 18) / 10)
+                if not orbAlive then break end
+
+                local orb               = Instance.new("Frame")
+                local sz                = math.random(18, 45)
+                orb.Size                = UDim2.new(0, sz, 0, sz)
+                orb.Position            = UDim2.new(math.random(5,90)/100, 0, math.random(10,85)/100, 0)
+                orb.BackgroundColor3    = orbColors[math.random(#orbColors)]
+                orb.BackgroundTransparency = 0.55
+                orb.BorderSizePixel     = 0
+                orb.ZIndex              = 1
+                orb.AnchorPoint         = Vector2.new(0.5, 0.5)
+                orb.Parent              = bgCanvas
+                Instance.new("UICorner", orb).CornerRadius = UDim.new(1, 0)
+
+                -- Add a UIGradient radial-ish fade by using a gradient
+                local grad          = Instance.new("UIGradient")
+                grad.Transparency   = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0,   0.3),
+                    NumberSequenceKeypoint.new(0.5, 0.55),
+                    NumberSequenceKeypoint.new(1,   1),
+                })
+                grad.Parent = orb
+
+                -- Drift to random nearby position then fade out
+                local driftX = orb.Position.X.Scale + (math.random(-20,20)/100)
+                local driftY = orb.Position.Y.Scale + (math.random(-15,15)/100)
+                local life   = math.random(30, 60) / 10
+
+                TweenService:Create(orb,
+                    TweenInfo.new(life, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    {
+                        Position = UDim2.new(
+                            math.clamp(driftX, 0.03, 0.95), 0,
+                            math.clamp(driftY, 0.05, 0.90), 0
+                        ),
+                        BackgroundTransparency = 0.85,
+                    }
+                ):Play()
+
+                task.delay(life, function()
+                    if orb and orb.Parent then orb:Destroy() end
+                end)
+            end
+        end)
+
+        -- Scanline shimmer — a thin bright line that sweeps down periodically
+        task.spawn(function()
+            while bgCanvas and bgCanvas.Parent do
+                task.wait(math.random(35, 65) / 10)
+                if not (bgCanvas and bgCanvas.Parent) then break end
+
+                local line              = Instance.new("Frame")
+                line.Size               = UDim2.new(1, 0, 0, 2)
+                line.Position           = UDim2.new(0, 0, 0, 0)
+                line.BackgroundColor3   = Color3.fromRGB(150, 80, 255)
+                line.BackgroundTransparency = 0.3
+                line.BorderSizePixel    = 0
+                line.ZIndex             = 2
+                line.Parent             = bgCanvas
+
+                TweenService:Create(line,
+                    TweenInfo.new(1.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+                    { Position = UDim2.new(0, 0, 1, 0), BackgroundTransparency = 0.85 }
+                ):Play()
+                task.delay(1.5, function()
+                    if line and line.Parent then line:Destroy() end
+                end)
+            end
+        end)
+
         --// ── ⚡ VIOLET GLOW BORDER (animated) ─────────────
         local glowStroke        = Instance.new("UIStroke")
         glowStroke.Color        = Color3.fromRGB(180, 90, 255)   -- vivid purple glow
@@ -1159,52 +1293,123 @@ function Library:AddWindow(title, options)
             end
         end
 
-        --- Emit a small burst of particles on the active tab button
+        --- ⚡ BLUE THUNDER HIGHLIGHT on the active tab button
+        --- Draws mini electric arcs inside/around the selected tab
         local function emitTabParticles(btn)
             if btn ~= activeBtn then return end
             local size = btn.AbsoluteSize
-            for _ = 1, 3 do
-                task.spawn(function()
-                    local p            = Instance.new("Frame")
-                    p.Name             = "SimpleParticle"
-                    p.Size             = UDim2.new(0, 1.5, 0, 1.5)
-                    p.AnchorPoint      = Vector2.new(0.5, 0.5)
-                    p.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                    p.BorderSizePixel  = 0
-                    p.ZIndex           = btn.ZIndex + 15
+            if size.X < 5 or size.Y < 5 then return end
 
-                    local corner        = Instance.new("UICorner")
-                    corner.CornerRadius = UDim.new(1, 0)
-                    corner.Parent       = p
+            -- === ELECTRIC ARC SEGMENTS ===
+            task.spawn(function()
+                -- Pick two random points on the button edges
+                local x1 = math.random(2, math.max(3, size.X - 2))
+                local y1 = math.random(1, math.max(2, size.Y - 1))
+                local x2 = x1 + math.random(-12, 12)
+                local y2 = y1 + math.random(-8,  8)
 
-                    -- Spawn on a random edge
-                    local edge  = math.random(1, 4)
-                    local px, py
-                    if     edge == 1 then px = math.random(5, size.X - 5); py = 1
-                    elseif edge == 2 then px = size.X - 1;                 py = math.random(5, size.Y - 5)
-                    elseif edge == 3 then px = math.random(5, size.X - 5); py = size.Y - 1
-                    else                  px = 1;                           py = math.random(5, size.Y - 5)
+                local arcColors = {
+                    Color3.fromRGB(80,  180, 255),  -- electric blue
+                    Color3.fromRGB(120, 210, 255),  -- light cyan-blue
+                    Color3.fromRGB(200, 240, 255),  -- near-white blue
+                    Color3.fromRGB(60,  140, 255),  -- pure blue
+                }
+                local col = arcColors[math.random(#arcColors)]
+
+                -- Draw 2–4 jagged segments forming a mini arc
+                local segs = math.random(2, 4)
+                local pts  = { Vector2.new(x1, y1) }
+                for s = 1, segs - 1 do
+                    local t  = s / segs
+                    local mx = x1 + (x2 - x1) * t + math.random(-5, 5)
+                    local my = y1 + (y2 - y1) * t + math.random(-4, 4)
+                    table.insert(pts, Vector2.new(mx, my))
+                end
+                table.insert(pts, Vector2.new(x2, y2))
+
+                local segFrames = {}
+                for s = 1, #pts - 1 do
+                    local p1 = pts[s];  local p2 = pts[s+1]
+                    local dx = p2.X - p1.X;  local dy = p2.Y - p1.Y
+                    local ln = math.sqrt(dx*dx + dy*dy)
+                    if ln < 0.5 then continue end
+                    local ang = math.deg(math.atan2(dy, dx))
+
+                    local seg              = Instance.new("Frame")
+                    seg.Size               = UDim2.new(0, ln, 0, math.random(1, 2))
+                    seg.Position           = UDim2.new(0, p1.X, 0, p1.Y)
+                    seg.Rotation           = ang
+                    seg.BackgroundColor3   = col
+                    seg.BackgroundTransparency = 0.05
+                    seg.BorderSizePixel    = 0
+                    seg.ZIndex             = btn.ZIndex + 20
+                    seg.AnchorPoint        = Vector2.new(0, 0.5)
+                    seg.Parent             = btn
+                    table.insert(segFrames, seg)
+
+                    -- Glow halo (wider, faded)
+                    local glow             = Instance.new("Frame")
+                    glow.Size              = UDim2.new(0, ln, 0, math.random(3, 6))
+                    glow.Position          = seg.Position
+                    glow.Rotation          = ang
+                    glow.BackgroundColor3  = col
+                    glow.BackgroundTransparency = 0.6
+                    glow.BorderSizePixel   = 0
+                    glow.ZIndex            = btn.ZIndex + 19
+                    glow.AnchorPoint       = Vector2.new(0, 0.5)
+                    glow.Parent            = btn
+                    table.insert(segFrames, glow)
+                end
+
+                -- Fade out
+                task.delay(0.07, function()
+                    for _, f in ipairs(segFrames) do
+                        if f and f.Parent then
+                            TweenService:Create(f,
+                                TweenInfo.new(0.12, Enum.EasingStyle.Linear),
+                                { BackgroundTransparency = 1 }):Play()
+                        end
                     end
-
-                    p.Position = UDim2.new(0, px, 0, py)
-                    p.Parent   = btn
-
-                    -- Move outward from center
-                    local cx, cy     = size.X / 2, size.Y / 2
-                    local dx, dy     = px - cx, py - cy
-                    local len        = math.sqrt(dx * dx + dy * dy)
-                    dx, dy           = dx / len, dy / len
-
-                    local info = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-                    TweenService:Create(p, info, {
-                        Position           = UDim2.new(0, px + dx * 6, 0, py + dy * 6),
-                        BackgroundTransparency = 1,
-                    }):Play()
-
-                    task.wait(0.5)
-                    if p and p.Parent then p:Destroy() end
+                    task.delay(0.13, function()
+                        for _, f in ipairs(segFrames) do
+                            if f and f.Parent then f:Destroy() end
+                        end
+                    end)
                 end)
-            end
+            end)
+
+            -- === BLUE SPARK DOT ===
+            task.spawn(function()
+                local sparkColors = {
+                    Color3.fromRGB(80,  180, 255),
+                    Color3.fromRGB(180, 230, 255),
+                    Color3.fromRGB(60,  140, 255),
+                }
+                local sp             = Instance.new("Frame")
+                sp.Size              = UDim2.new(0, math.random(2, 4), 0, math.random(2, 4))
+                sp.AnchorPoint       = Vector2.new(0.5, 0.5)
+                sp.BackgroundColor3  = sparkColors[math.random(#sparkColors)]
+                sp.BackgroundTransparency = 0.1
+                sp.BorderSizePixel   = 0
+                sp.ZIndex            = btn.ZIndex + 22
+                sp.Position          = UDim2.new(
+                    math.random(5, math.max(6, size.X - 5)) / math.max(1, size.X), 0,
+                    math.random(1, math.max(2, size.Y - 1)) / math.max(1, size.Y), 0
+                )
+                sp.Parent = btn
+                Instance.new("UICorner", sp).CornerRadius = UDim.new(1, 0)
+
+                -- Shoot outward and fade
+                local ex = sp.Position.X.Scale + (math.random(-15, 15) / math.max(1, size.X))
+                local ey = sp.Position.Y.Scale + (math.random(-10, 10) / math.max(1, size.Y))
+                TweenService:Create(sp,
+                    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    { Position = UDim2.new(ex, 0, ey, 0), BackgroundTransparency = 1 }):Play()
+
+                task.delay(0.32, function()
+                    if sp and sp.Parent then sp:Destroy() end
+                end)
+            end)
         end
 
         local function startParticles()
@@ -1225,6 +1430,9 @@ function Library:AddWindow(title, options)
             if activeBtn and activeBtn ~= tabBtn then
                 local outline = activeBtn:FindFirstChild("TabOutline")
                 if outline then outline.Visible = false end
+                -- Remove blue thunder stroke from previously active tab
+                local prevStroke = activeBtn:FindFirstChild("ThunderStroke")
+                if prevStroke then prevStroke:Destroy() end
                 activeBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
             end
 
@@ -1239,6 +1447,46 @@ function Library:AddWindow(title, options)
             if outline then
                 outline.Visible     = true
                 outline.BorderColor3 = options.main_color
+            end
+
+            -- ⚡ Blue thunder highlight stroke on active tab
+            local oldThunderStroke = tabBtn:FindFirstChild("ThunderStroke")
+            if oldThunderStroke then oldThunderStroke:Destroy() end
+
+            local thunderStroke        = Instance.new("UIStroke")
+            thunderStroke.Name         = "ThunderStroke"
+            thunderStroke.Color        = Color3.fromRGB(80, 180, 255)   -- electric blue
+            thunderStroke.Thickness    = 1.5
+            thunderStroke.Transparency = 0.0
+            thunderStroke.Parent       = tabBtn
+
+            -- Pulse between electric blue and cyan-white
+            task.spawn(function()
+                local blueShades = {
+                    Color3.fromRGB(80,  180, 255),
+                    Color3.fromRGB(180, 230, 255),
+                    Color3.fromRGB(60,  120, 255),
+                    Color3.fromRGB(140, 210, 255),
+                }
+                local bi = 1
+                while thunderStroke and thunderStroke.Parent and activeBtn == tabBtn do
+                    bi = (bi % #blueShades) + 1
+                    TweenService:Create(thunderStroke,
+                        TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                        { Color = blueShades[bi], Transparency = 0.0 }):Play()
+                    task.wait(0.4)
+                    TweenService:Create(thunderStroke,
+                        TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                        { Color = Color3.fromRGB(40, 100, 220), Transparency = 0.4 }):Play()
+                    task.wait(0.4)
+                end
+                if thunderStroke and thunderStroke.Parent then thunderStroke:Destroy() end
+            end)
+
+            -- Remove blue stroke from previously active tab
+            if activeBtn and activeBtn ~= tabBtn then
+                local prevStroke = activeBtn:FindFirstChild("ThunderStroke")
+                if prevStroke then prevStroke:Destroy() end
             end
 
             tabBtn.TextColor3  = Color3.new(1, 1, 1)
