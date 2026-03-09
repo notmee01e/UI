@@ -6,25 +6,33 @@
 --// ─────────────────────────────────────────────────────────
 --//  🎨 VIOLET THUNDER THEME CONFIGURATION
 --// ─────────────────────────────────────────────────────────
+-- 🎨 PURPLE PALETTE REFERENCE
+--   Deep bg:    RGB( 15,  6,  30)  ← near-black purple
+--   Dark panel: RGB( 28, 12,  55)  ← midnight purple
+--   Mid panel:  RGB( 38, 18,  72)  ← dark violet panel
+--   Accent 1:   RGB( 90, 20, 180)  ← vivid purple
+--   Accent 2:   RGB(130, 50, 220)  ← bright violet
+--   Accent 3:   RGB(180, 90, 255)  ← lavender highlight
+--   Glow:       RGB(200,120, 255)  ← soft neon purple
+
 local Config = {
-    main_color  = Color3.fromRGB(138, 43, 226),  -- ⚡ vivid violet
+    main_color  = Color3.fromRGB(150, 60, 255),   -- vivid purple accent
     min_size    = Vector2.new(420, 320),
     toggle_key  = Enum.KeyCode.RightShift,
     can_resize  = true,
 
-    -- Thunder color palette
     title_bar   = {
-        Color3.fromRGB(60,  0,  120),   -- deep purple
-        Color3.fromRGB(120, 0,  200),   -- vivid violet
-        Color3.fromRGB(80,  0,  160),   -- mid purple
+        Color3.fromRGB(45,  5,  95),    -- deep purple
+        Color3.fromRGB(100, 20, 200),   -- vivid violet
+        Color3.fromRGB(60, 10, 130),    -- mid purple
     },
     background  = {
-        Color3.fromRGB(12,  5,  25),    -- near-black purple
-        Color3.fromRGB(20,  8,  40),    -- dark violet
-        Color3.fromRGB(10,  4,  22),
+        Color3.fromRGB(15,  6,  30),    -- near-black purple
+        Color3.fromRGB(22, 10,  45),    -- midnight purple
+        Color3.fromRGB(12,  5,  25),    -- darkest purple
     },
     title_bar_transparency  = 0,
-    background_transparency = 0.06,
+    background_transparency = 0.05,
     tween_time  = 0.12,
 }
 
@@ -88,7 +96,7 @@ PrefabWindow.Position              = UDim2.new(0, 20, 0, 20)
 PrefabWindow.Selectable            = true
 PrefabWindow.Size                  = UDim2.new(0, 200, 0, 200)
 PrefabWindow.Image                 = "rbxassetid://2851926732"
-PrefabWindow.ImageColor3           = Color3.new(0.0823529, 0.0862745, 0.0901961)
+PrefabWindow.ImageColor3           = Color3.fromRGB(18, 8, 35)
 PrefabWindow.ScaleType             = Enum.ScaleType.Slice
 PrefabWindow.SliceCenter           = Rect.new(12, 12, 12, 12)
 
@@ -107,7 +115,7 @@ PrefabResizer.Size                  = UDim2.new(0, 20, 0, 20)
 local PrefabBar = Instance.new("Frame")
 PrefabBar.Name             = "Bar"
 PrefabBar.Parent           = PrefabWindow
-PrefabBar.BackgroundColor3 = Color3.fromRGB(80, 0, 160)  -- ⚡ violet
+PrefabBar.BackgroundColor3 = Color3.fromRGB(60, 10, 130)  -- ⚡ violet
 PrefabBar.BorderSizePixel  = 0
 PrefabBar.Position         = UDim2.new(0, 0, 0, 5)
 PrefabBar.Size             = UDim2.new(1, 0, 0, 15)
@@ -127,12 +135,12 @@ PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ash
 local PrefabBarBase = Instance.new("ImageLabel")
 PrefabBarBase.Name             = "Base"
 PrefabBarBase.Parent           = PrefabBar
-PrefabBarBase.BackgroundColor3 = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabBarBase.BackgroundColor3 = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabBarBase.BorderSizePixel  = 0
 PrefabBarBase.Position         = UDim2.new(0, 0, 0.8, 0)
 PrefabBarBase.Size             = UDim2.new(1, 0, 0, 10)
 PrefabBarBase.Image            = "rbxassetid://2851926732"
-PrefabBarBase.ImageColor3      = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabBarBase.ImageColor3      = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabBarBase.ScaleType        = Enum.ScaleType.Slice
 PrefabBarBase.SliceCenter      = Rect.new(12, 12, 12, 12)
 
@@ -145,7 +153,7 @@ PrefabBarTop.BackgroundTransparency = 1
 PrefabBarTop.Position         = UDim2.new(0, 0, 0, -5)
 PrefabBarTop.Size             = UDim2.new(1, 0, 0, 10)
 PrefabBarTop.Image            = "rbxassetid://2851926732"
-PrefabBarTop.ImageColor3      = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabBarTop.ImageColor3      = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabBarTop.ScaleType        = Enum.ScaleType.Slice
 PrefabBarTop.SliceCenter      = Rect.new(12, 12, 12, 12)
 
@@ -183,7 +191,7 @@ PrefabTabSelection.Position              = UDim2.new(0, 15, 0, 30)
 PrefabTabSelection.Size                  = UDim2.new(1, -30, 0, 25)
 PrefabTabSelection.Visible               = false
 PrefabTabSelection.Image                 = "rbxassetid://2851929490"
-PrefabTabSelection.ImageColor3           = Color3.new(0.145098, 0.14902, 0.156863)
+PrefabTabSelection.ImageColor3           = Color3.fromRGB(28, 12, 55)
 PrefabTabSelection.ScaleType             = Enum.ScaleType.Slice
 PrefabTabSelection.SliceCenter           = Rect.new(4, 4, 4, 4)
 
@@ -216,8 +224,8 @@ PrefabTabButtonsLayout.Padding        = UDim.new(0, 2)
 -- Tab Selection > Underline separator
 local PrefabTabUnderline = Instance.new("Frame")
 PrefabTabUnderline.Parent             = PrefabTabSelection
-PrefabTabUnderline.BackgroundColor3   = Color3.new(0.12549, 0.227451, 0.372549)
-PrefabTabUnderline.BorderColor3       = Color3.new(0.105882, 0.164706, 0.207843)
+PrefabTabUnderline.BackgroundColor3   = Color3.fromRGB(90, 20, 180)
+PrefabTabUnderline.BorderColor3       = Color3.fromRGB(60, 10, 130)
 PrefabTabUnderline.BorderSizePixel    = 0
 PrefabTabUnderline.Position           = UDim2.new(0, 0, 1, 0)
 PrefabTabUnderline.Size               = UDim2.new(1, 0, 0, 2)
@@ -258,7 +266,7 @@ PrefabTextBoxBg.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabTextBoxBg.BackgroundTransparency = 1
 PrefabTextBoxBg.Size             = UDim2.new(1, 0, 1, 0)
 PrefabTextBoxBg.Image            = "rbxassetid://2851929490"
-PrefabTextBoxBg.ImageColor3      = Color3.new(0.203922, 0.207843, 0.219608)
+PrefabTextBoxBg.ImageColor3      = Color3.fromRGB(38, 18, 72)
 PrefabTextBoxBg.ScaleType        = Enum.ScaleType.Slice
 PrefabTextBoxBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -271,7 +279,7 @@ PrefabSlider.BackgroundTransparency = 1
 PrefabSlider.Position         = UDim2.new(0, 0, 0.178571433, 0)
 PrefabSlider.Size             = UDim2.new(1, 0, 0, 20)
 PrefabSlider.Image            = "rbxassetid://2851929490"
-PrefabSlider.ImageColor3      = Color3.new(0.145098, 0.14902, 0.156863)
+PrefabSlider.ImageColor3      = Color3.fromRGB(28, 12, 55)
 PrefabSlider.ScaleType        = Enum.ScaleType.Slice
 PrefabSlider.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -295,7 +303,7 @@ PrefabSliderFill.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabSliderFill.BackgroundTransparency = 1
 PrefabSliderFill.Size             = UDim2.new(0, 0, 0, 20)
 PrefabSliderFill.Image            = "rbxassetid://2851929490"
-PrefabSliderFill.ImageColor3      = Color3.new(0.254902, 0.262745, 0.278431)
+PrefabSliderFill.ImageColor3      = Color3.fromRGB(75, 30, 140)
 PrefabSliderFill.ScaleType        = Enum.ScaleType.Slice
 PrefabSliderFill.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -346,7 +354,7 @@ PrefabDropdownBox.Position              = UDim2.new(0, 0, 0, 25)
 PrefabDropdownBox.Size                  = UDim2.new(1, 0, 0, 150)
 PrefabDropdownBox.ZIndex                = 3
 PrefabDropdownBox.Image                 = "rbxassetid://2851929490"
-PrefabDropdownBox.ImageColor3           = Color3.new(0.129412, 0.133333, 0.141176)
+PrefabDropdownBox.ImageColor3           = Color3.fromRGB(22, 10, 45)
 PrefabDropdownBox.ScaleType             = Enum.ScaleType.Slice
 PrefabDropdownBox.SliceCenter           = Rect.new(4, 4, 4, 4)
 
@@ -360,7 +368,7 @@ PrefabDropdownList.Size                    = UDim2.new(1, 0, 1, 0)
 PrefabDropdownList.ZIndex                  = 3
 PrefabDropdownList.CanvasSize              = UDim2.new(0, 0, 0, 0)
 PrefabDropdownList.ScrollBarThickness      = 4
-PrefabDropdownList.ScrollBarImageColor3    = Color3.fromRGB(160, 60, 255)  -- violet
+PrefabDropdownList.ScrollBarImageColor3    = Color3.fromRGB(180, 90, 255)  -- violet
 
 local PrefabDropdownListLayout = Instance.new("UIListLayout")
 PrefabDropdownListLayout.Parent    = PrefabDropdownList
@@ -373,7 +381,7 @@ PrefabDropdownBg.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabDropdownBg.BackgroundTransparency = 1
 PrefabDropdownBg.Size             = UDim2.new(1, 0, 1, 0)
 PrefabDropdownBg.Image            = "rbxassetid://2851929490"
-PrefabDropdownBg.ImageColor3      = Color3.new(0.203922, 0.207843, 0.219608)
+PrefabDropdownBg.ImageColor3      = Color3.fromRGB(38, 18, 72)
 PrefabDropdownBg.ScaleType        = Enum.ScaleType.Slice
 PrefabDropdownBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -381,7 +389,7 @@ PrefabDropdownBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 local PrefabTabButton = Instance.new("TextButton")
 PrefabTabButton.Name                  = "TabButton"
 PrefabTabButton.Parent                = Prefabs
-PrefabTabButton.BackgroundColor3      = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabTabButton.BackgroundColor3      = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabTabButton.BackgroundTransparency = 1
 PrefabTabButton.BorderSizePixel       = 0
 PrefabTabButton.Size                  = UDim2.new(0, 71, 0, 20)
@@ -398,7 +406,7 @@ PrefabTabButtonBg.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabTabButtonBg.BackgroundTransparency = 1
 PrefabTabButtonBg.Size             = UDim2.new(1, 0, 1, 0)
 PrefabTabButtonBg.Image            = "rbxassetid://2851929490"
-PrefabTabButtonBg.ImageColor3      = Color3.new(0.203922, 0.207843, 0.219608)
+PrefabTabButtonBg.ImageColor3      = Color3.fromRGB(38, 18, 72)
 PrefabTabButtonBg.ScaleType        = Enum.ScaleType.Slice
 PrefabTabButtonBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -411,14 +419,14 @@ PrefabFolder.BackgroundTransparency = 1
 PrefabFolder.Position         = UDim2.new(0, 0, 0, 50)
 PrefabFolder.Size             = UDim2.new(1, 0, 0, 20)
 PrefabFolder.Image            = "rbxassetid://2851929490"
-PrefabFolder.ImageColor3      = Color3.new(0.0823529, 0.0862745, 0.0901961)
+PrefabFolder.ImageColor3      = Color3.fromRGB(18, 8, 35)
 PrefabFolder.ScaleType        = Enum.ScaleType.Slice
 PrefabFolder.SliceCenter      = Rect.new(4, 4, 4, 4)
 
 local PrefabFolderButton = Instance.new("TextButton")
 PrefabFolderButton.Name             = "Button"
 PrefabFolderButton.Parent           = PrefabFolder
-PrefabFolderButton.BackgroundColor3 = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabFolderButton.BackgroundColor3 = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabFolderButton.BackgroundTransparency = 1
 PrefabFolderButton.BorderSizePixel  = 0
 PrefabFolderButton.Size             = UDim2.new(1, 0, 0, 20)
@@ -436,7 +444,7 @@ PrefabFolderButtonBg.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabFolderButtonBg.BackgroundTransparency = 1
 PrefabFolderButtonBg.Size             = UDim2.new(1, 0, 1, 0)
 PrefabFolderButtonBg.Image            = "rbxassetid://2851929490"
-PrefabFolderButtonBg.ImageColor3      = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabFolderButtonBg.ImageColor3      = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabFolderButtonBg.ScaleType        = Enum.ScaleType.Slice
 PrefabFolderButtonBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -498,7 +506,7 @@ PrefabSwitchBg.BackgroundColor3      = Color3.new(1, 1, 1)
 PrefabSwitchBg.BackgroundTransparency = 1
 PrefabSwitchBg.Size                  = UDim2.new(1, 0, 1, 0)
 PrefabSwitchBg.Image                 = "rbxassetid://2851929490"
-PrefabSwitchBg.ImageColor3           = Color3.fromRGB(120, 0, 200)  -- violet
+PrefabSwitchBg.ImageColor3           = Color3.fromRGB(100, 20, 200)  -- violet
 PrefabSwitchBg.ImageTransparency     = 0.5
 PrefabSwitchBg.ScaleType             = Enum.ScaleType.Slice
 PrefabSwitchBg.SliceCenter           = Rect.new(4, 4, 4, 4)
@@ -520,7 +528,7 @@ PrefabSwitchTitle.TextXAlignment        = Enum.TextXAlignment.Left
 local PrefabButton = Instance.new("TextButton")
 PrefabButton.Name             = "Button"
 PrefabButton.Parent           = Prefabs
-PrefabButton.BackgroundColor3 = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabButton.BackgroundColor3 = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabButton.BackgroundTransparency = 1
 PrefabButton.BorderSizePixel  = 0
 PrefabButton.Size             = UDim2.new(0, 91, 0, 20)
@@ -536,7 +544,7 @@ PrefabButtonBg.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabButtonBg.BackgroundTransparency = 1
 PrefabButtonBg.Size             = UDim2.new(1, 0, 1, 0)
 PrefabButtonBg.Image            = "rbxassetid://2851929490"
-PrefabButtonBg.ImageColor3      = Color3.fromRGB(80, 0, 160)  -- violet
+PrefabButtonBg.ImageColor3      = Color3.fromRGB(60, 10, 130)  -- violet
 PrefabButtonBg.ScaleType        = Enum.ScaleType.Slice
 PrefabButtonBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -544,7 +552,7 @@ PrefabButtonBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 local PrefabDropdownItem = Instance.new("TextButton")
 PrefabDropdownItem.Name             = "DropdownButton"
 PrefabDropdownItem.Parent           = Prefabs
-PrefabDropdownItem.BackgroundColor3 = Color3.new(0.129412, 0.133333, 0.141176)
+PrefabDropdownItem.BackgroundColor3 = Color3.fromRGB(22, 10, 45)
 PrefabDropdownItem.BorderSizePixel  = 0
 PrefabDropdownItem.Size             = UDim2.new(1, 0, 0, 20)
 PrefabDropdownItem.ZIndex           = 3
@@ -562,7 +570,7 @@ PrefabKeybind.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabKeybind.BackgroundTransparency = 1
 PrefabKeybind.Size             = UDim2.new(0, 200, 0, 20)
 PrefabKeybind.Image            = "rbxassetid://2851929490"
-PrefabKeybind.ImageColor3      = Color3.new(0.203922, 0.207843, 0.219608)
+PrefabKeybind.ImageColor3      = Color3.fromRGB(38, 18, 72)
 PrefabKeybind.ScaleType        = Enum.ScaleType.Slice
 PrefabKeybind.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -600,7 +608,7 @@ PrefabKeybindInputBg.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabKeybindInputBg.BackgroundTransparency = 1
 PrefabKeybindInputBg.Size             = UDim2.new(1, 0, 1, 0)
 PrefabKeybindInputBg.Image            = "rbxassetid://2851929490"
-PrefabKeybindInputBg.ImageColor3      = Color3.new(0.290196, 0.294118, 0.313726)
+PrefabKeybindInputBg.ImageColor3      = Color3.fromRGB(55, 22, 105)
 PrefabKeybindInputBg.ScaleType        = Enum.ScaleType.Slice
 PrefabKeybindInputBg.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -628,7 +636,7 @@ PrefabColorPicker.BackgroundColor3 = Color3.new(1, 1, 1)
 PrefabColorPicker.BackgroundTransparency = 1
 PrefabColorPicker.Size             = UDim2.new(0, 180, 0, 110)
 PrefabColorPicker.Image            = "rbxassetid://2851929490"
-PrefabColorPicker.ImageColor3      = Color3.new(0.203922, 0.207843, 0.219608)
+PrefabColorPicker.ImageColor3      = Color3.fromRGB(38, 18, 72)
 PrefabColorPicker.ScaleType        = Enum.ScaleType.Slice
 PrefabColorPicker.SliceCenter      = Rect.new(4, 4, 4, 4)
 
@@ -900,12 +908,12 @@ function Library:AddWindow(title, options)
 
     -- Defaults
     options.tween_time             = options.tween_time or 0.1
-    options.title_bar              = options.title_bar  or { Color3.fromRGB(41, 74, 122) }
+    options.title_bar              = options.title_bar  or { Color3.fromRGB(100, 20, 200) }
     if typeof(options.title_bar) == "Color3" then
         options.title_bar = { options.title_bar }
     end
     options.title_bar_transparency = options.title_bar_transparency or 0
-    options.background             = options.background or { Color3.new(0.08, 0.09, 0.1) }
+    options.background             = options.background or { Color3.fromRGB(15, 6, 30) }
     if typeof(options.background) == "Color3" then
         options.background = { options.background }
     end
@@ -989,34 +997,34 @@ function Library:AddWindow(title, options)
 
         --// ── ⚡ VIOLET GLOW BORDER (animated) ─────────────
         local glowStroke        = Instance.new("UIStroke")
-        glowStroke.Color        = Color3.fromRGB(160, 60, 255)
-        glowStroke.Thickness    = 2
-        glowStroke.Transparency = 0.3
+        glowStroke.Color        = Color3.fromRGB(180, 90, 255)   -- vivid purple glow
+        glowStroke.Thickness    = 2.5
+        glowStroke.Transparency = 0.2
         glowStroke.Parent       = win
 
-        -- Pulse the border glow continuously
+        -- 💜 Pulse the border glow between purple shades
         task.spawn(function()
-            local colors = {
-                Color3.fromRGB(200, 80,  255),
-                Color3.fromRGB(120, 0,   220),
-                Color3.fromRGB(255, 150, 255),
-                Color3.fromRGB(100, 0,   180),
+            local pulseColors = {
+                Color3.fromRGB(200, 100, 255),  -- bright lavender
+                Color3.fromRGB(130,  50, 230),  -- deep violet
+                Color3.fromRGB(220, 150, 255),  -- soft pink-purple
+                Color3.fromRGB(100,  20, 200),  -- dark accent
             }
             local idx = 1
             while glowStroke and glowStroke.Parent do
-                idx = (idx % #colors) + 1
+                idx = (idx % #pulseColors) + 1
                 TweenService:Create(glowStroke,
-                    TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { Color = colors[idx], Transparency = 0.1 }):Play()
-                task.wait(0.9)
+                    TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { Color = pulseColors[idx], Transparency = 0.0 }):Play()
+                task.wait(1.2)
                 TweenService:Create(glowStroke,
-                    TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { Color = Color3.fromRGB(80, 0, 200), Transparency = 0.55 }):Play()
-                task.wait(0.9)
+                    TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { Color = Color3.fromRGB(75, 10, 175), Transparency = 0.5 }):Play()
+                task.wait(1.2)
             end
         end)
 
-        -- (no thunder flash)
+
 
         -- Minimize button: toggle tabs visibility
         local tabs = win:FindFirstChild("Tabs")
@@ -1264,9 +1272,9 @@ function Library:AddWindow(title, options)
             tabBtnCorner.Parent       = tabBtn
 
             local tabBtnStroke           = Instance.new("UIStroke")
-            tabBtnStroke.Color           = Color3.new(0, 0, 0)
+            tabBtnStroke.Color           = Color3.fromRGB(90, 20, 180)   -- purple border
             tabBtnStroke.Thickness       = 1.2
-            tabBtnStroke.Transparency    = 0.7
+            tabBtnStroke.Transparency    = 0.4
             tabBtnStroke.Parent          = tabBtn
 
             -- Selected outline indicator
@@ -1300,7 +1308,7 @@ function Library:AddWindow(title, options)
             scroller.ScrollBarThickness = 4
             scroller.CanvasSize         = UDim2.new(0, 0, 0, 0)
             scroller.ZIndex             = contentFrame.ZIndex
-            scroller.ScrollBarImageColor3       = Color3.fromRGB(160, 60, 255)  -- violet
+            scroller.ScrollBarImageColor3       = Color3.fromRGB(180, 90, 255)  -- violet
             scroller.ScrollBarImageTransparency = 0.3
 
             local layout = contentFrame:FindFirstChildOfClass("UIListLayout")
@@ -1682,14 +1690,14 @@ function Library:AddWindow(title, options)
                     if oldCorner then oldCorner:Destroy() end
 
                     local stroke           = Instance.new("UIStroke")
-                    stroke.Color           = Color3.new(0, 0, 0)
+                    stroke.Color           = Color3.fromRGB(110, 30, 210)  -- purple
                     stroke.Thickness       = 1
-                    stroke.Transparency    = 0.3
+                    stroke.Transparency    = 0.5
                     stroke.Parent          = item
 
                     item.MouseEnter:Connect(function()
-                        item.BackgroundTransparency = 0.8
-                        item.BackgroundColor3       = options.main_color
+                        item.BackgroundTransparency = 0.7
+                        item.BackgroundColor3       = Color3.fromRGB(110, 30, 210)  -- purple hover
                     end)
                     item.MouseLeave:Connect(function()
                         item.BackgroundTransparency = 1
