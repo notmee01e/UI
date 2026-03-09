@@ -1,4 +1,11 @@
+-- ╔══════════════════════════════════════════════════════════╗
+-- ║          ⚡ VIOLET THUNDER UI LIBRARY ⚡                  ║
+-- ║       Animated • Glowing • Thunder-Themed               ║
+-- ╚══════════════════════════════════════════════════════════╝
 
+--// ─────────────────────────────────────────────────────────
+--//  🎨 VIOLET THUNDER THEME CONFIGURATION
+--// ─────────────────────────────────────────────────────────
 local Config = {
     main_color  = Color3.fromRGB(138, 43, 226),  -- ⚡ vivid violet
     min_size    = Vector2.new(420, 320),
@@ -21,12 +28,17 @@ local Config = {
     tween_time  = 0.12,
 }
 
+--// ─────────────────────────────────────────────────────────
+--//  CLEANUP: destroy any previous instance of this GUI
+--// ─────────────────────────────────────────────────────────
 do
     local existing = game:GetService("CoreGui"):FindFirstChild("imgui")
     if existing then existing:Destroy() end
 end
 
-
+--// ─────────────────────────────────────────────────────────
+--//  SERVICES
+--// ─────────────────────────────────────────────────────────
 local UserInputService = game:GetService("UserInputService")
 local TweenService     = game:GetService("TweenService")
 local RunService       = game:GetService("RunService")
@@ -34,176 +46,12 @@ local Players          = game:GetService("Players")
 local LocalPlayer      = Players.LocalPlayer
 local Mouse            = LocalPlayer:GetMouse()
 
-
+--// ─────────────────────────────────────────────────────────
+--//  ROOT GUI
+--// ─────────────────────────────────────────────────────────
 local Root = Instance.new("ScreenGui")
 Root.Name   = "imgui"
 Root.Parent = game:GetService("CoreGui")
-
-local ThunderCanvas = Instance.new("Frame")
-ThunderCanvas.Name                   = "ThunderCanvas"
-ThunderCanvas.Size                   = UDim2.fromScale(1, 1)
-ThunderCanvas.BackgroundTransparency = 1
-ThunderCanvas.ZIndex                 = 0        -- sits behind everything
-ThunderCanvas.BorderSizePixel        = 0
-ThunderCanvas.Parent                 = Root
-
--- Colors used by lightning segments
-local LIGHTNING_COLORS = {
-    Color3.fromRGB(220, 150, 255),  -- soft violet
-    Color3.fromRGB(180,  80, 255),  -- vivid purple
-    Color3.fromRGB(255, 255, 255),  -- white core
-    Color3.fromRGB(140,  50, 220),  -- deep violet
-    Color3.fromRGB(200, 100, 255),  -- lavender
-}
-
---- Draw one lightning bolt from (x1,y1) to (x2,y2) with a given
---- number of jagged segments, then fade it out.
-local function spawnLightningBolt(x1, y1, x2, y2, segments, lifeTime)
-    segments = segments or 8
-    lifeTime = lifeTime or 0.18
-
-    local points = { Vector2.new(x1, y1) }
-    for i = 1, segments - 1 do
-        local t      = i / segments
-        local midX   = x1 + (x2 - x1) * t + math.random(-40, 40)
-        local midY   = y1 + (y2 - y1) * t + math.random(-25, 25)
-        table.insert(points, Vector2.new(midX, midY))
-    end
-    table.insert(points, Vector2.new(x2, y2))
-
-    local color   = LIGHTNING_COLORS[math.random(#LIGHTNING_COLORS)]
-    local frames  = {}
-
-    -- Draw each segment as a thin rotated Frame
-    for i = 1, #points - 1 do
-        local p1 = points[i]
-        local p2 = points[i + 1]
-        local dx = p2.X - p1.X
-        local dy = p2.Y - p1.Y
-        local len  = math.sqrt(dx * dx + dy * dy)
-        local ang  = math.deg(math.atan2(dy, dx))
-
-        local seg              = Instance.new("Frame")
-        seg.Size               = UDim2.new(0, len, 0, math.random(1, 3))
-        seg.Position           = UDim2.new(0, p1.X, 0, p1.Y)
-        seg.Rotation           = ang
-        seg.BackgroundColor3   = color
-        seg.BackgroundTransparency = 0.1
-        seg.BorderSizePixel    = 0
-        seg.ZIndex             = 1
-        seg.AnchorPoint        = Vector2.new(0, 0.5)
-        seg.Parent             = ThunderCanvas
-        table.insert(frames, seg)
-
-        -- Glow copy (wider, more transparent)
-        local glow             = Instance.new("Frame")
-        glow.Size              = UDim2.new(0, len, 0, math.random(4, 8))
-        glow.Position          = UDim2.new(0, p1.X, 0, p1.Y)
-        glow.Rotation          = ang
-        glow.BackgroundColor3  = color
-        glow.BackgroundTransparency = 0.65
-        glow.BorderSizePixel   = 0
-        glow.ZIndex            = 1
-        glow.AnchorPoint       = Vector2.new(0, 0.5)
-        glow.Parent            = ThunderCanvas
-        table.insert(frames, glow)
-    end
-
-    -- Fade out and destroy
-    task.delay(lifeTime * 0.6, function()
-        for _, f in ipairs(frames) do
-            if f and f.Parent then
-                TweenService:Create(f,
-                    TweenInfo.new(lifeTime * 0.4, Enum.EasingStyle.Linear),
-                    { BackgroundTransparency = 1 }):Play()
-            end
-        end
-        task.delay(lifeTime * 0.4 + 0.05, function()
-            for _, f in ipairs(frames) do
-                if f and f.Parent then f:Destroy() end
-            end
-        end)
-    end)
-end
-
---- Spawn a full multi-branch storm bolt across the screen
-local function spawnStormBolt()
-    local sw = ThunderCanvas.AbsoluteSize.X
-    local sh = ThunderCanvas.AbsoluteSize.Y
-    if sw == 0 then sw = 1366 end
-    if sh == 0 then sh = 768  end
-
-    -- Main bolt: top edge → somewhere in the lower half
-    local startX  = math.random(0, sw)
-    local endX    = startX + math.random(-200, 200)
-    local endY    = math.random(sh * 0.4, sh * 0.9)
-
-    spawnLightningBolt(startX, 0, endX, endY, math.random(6, 14), 0.22)
-
-    -- 1-3 branches off the main bolt
-    local branches = math.random(1, 3)
-    for _ = 1, branches do
-        local bx1 = startX + (endX - startX) * math.random(20, 70) / 100
-        local by1 = endY   * math.random(20, 70) / 100
-        local bx2 = bx1   + math.random(-150, 150)
-        local by2 = by1   + math.random(60, 200)
-        task.delay(math.random(0, 5) / 100, function()
-            spawnLightningBolt(bx1, by1, bx2, by2, math.random(3, 7), 0.16)
-        end)
-    end
-end
-
---- Background loop: fires bolts at random intervals
-local thunderActive = true
-task.spawn(function()
-    while thunderActive and Root and Root.Parent do
-        task.wait(math.random(18, 45) / 10)   -- 1.8 – 4.5 s between bolts
-        if Root.Enabled then
-            -- Sometimes do a quick double-flash
-            spawnStormBolt()
-            if math.random() > 0.6 then
-                task.delay(0.08, spawnStormBolt)
-            end
-        end
-    end
-end)
-
--- Ambient violet particle drift (small glowing dots)
-task.spawn(function()
-    while thunderActive and Root and Root.Parent do
-        task.wait(0.3)
-        if not Root.Enabled then continue end
-
-        local sw = ThunderCanvas.AbsoluteSize.X
-        local sh = ThunderCanvas.AbsoluteSize.Y
-        if sw == 0 then continue end
-
-        local dot              = Instance.new("Frame")
-        local sz               = math.random(2, 5)
-        dot.Size               = UDim2.new(0, sz, 0, sz)
-        dot.Position           = UDim2.new(math.random(), 0, math.random(), 0)
-        dot.BackgroundColor3   = LIGHTNING_COLORS[math.random(#LIGHTNING_COLORS)]
-        dot.BackgroundTransparency = math.random(40, 70) / 100
-        dot.BorderSizePixel    = 0
-        dot.ZIndex             = 1
-        dot.AnchorPoint        = Vector2.new(0.5, 0.5)
-        dot.Parent             = ThunderCanvas
-        Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
-
-        -- Drift upward and fade
-        TweenService:Create(dot,
-            TweenInfo.new(math.random(25, 55) / 10, Enum.EasingStyle.Linear),
-            {
-                Position = UDim2.new(dot.Position.X.Scale, 0,
-                    math.clamp(dot.Position.Y.Scale - 0.3, 0, 1), 0),
-                BackgroundTransparency = 1,
-            }):Play()
-
-        task.delay(5.5, function()
-            if dot and dot.Parent then dot:Destroy() end
-        end)
-    end
-end)
 
 --// ─────────────────────────────────────────────────────────
 --//  PREFABS CONTAINER  (hidden templates cloned at runtime)
@@ -1168,31 +1016,7 @@ function Library:AddWindow(title, options)
             end
         end)
 
-        -- ⚡ Random thunder flash on the title bar
-        task.spawn(function()
-            while bar and bar.Parent do
-                task.wait(math.random(30, 80) / 10)
-                -- Quick bright flash
-                TweenService:Create(bar,
-                    TweenInfo.new(0.05, Enum.EasingStyle.Linear),
-                    { BackgroundColor3 = Color3.fromRGB(200, 120, 255) }):Play()
-                task.wait(0.06)
-                TweenService:Create(bar,
-                    TweenInfo.new(0.12, Enum.EasingStyle.Sine),
-                    { BackgroundColor3 = Color3.fromRGB(80, 0, 160) }):Play()
-                -- Sometimes double-flash
-                if math.random() > 0.5 then
-                    task.wait(0.09)
-                    TweenService:Create(bar,
-                        TweenInfo.new(0.04, Enum.EasingStyle.Linear),
-                        { BackgroundColor3 = Color3.fromRGB(220, 150, 255) }):Play()
-                    task.wait(0.06)
-                    TweenService:Create(bar,
-                        TweenInfo.new(0.15, Enum.EasingStyle.Sine),
-                        { BackgroundColor3 = Color3.fromRGB(80, 0, 160) }):Play()
-                end
-            end
-        end)
+        -- (no thunder flash)
 
         -- Minimize button: toggle tabs visibility
         local tabs = win:FindFirstChild("Tabs")
@@ -1548,15 +1372,6 @@ function Library:AddWindow(title, options)
                 btn.TextColor3 = Color3.new(1, 1, 1)
                 btn.MouseButton1Click:Connect(function()
                     playRipple(btn, Mouse.X, Mouse.Y)
-                    -- ⚡ Thunder flash on click
-                    TweenService:Create(btn,
-                        TweenInfo.new(0.05, Enum.EasingStyle.Linear),
-                        { BackgroundColor3 = Color3.fromRGB(220, 150, 255) }):Play()
-                    task.delay(0.1, function()
-                        TweenService:Create(btn,
-                            TweenInfo.new(0.2, Enum.EasingStyle.Sine),
-                            { BackgroundColor3 = Color3.fromRGB(80, 0, 160) }):Play()
-                    end)
                     pcall(callback)
                 end)
                 return btn
@@ -2124,7 +1939,6 @@ end
 -- Cleanup connections when the script is removed
 script.AncestryChanged:Connect(function()
     if not script.Parent then
-        thunderActive = false
         cleanup()
     end
 end)
