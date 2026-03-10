@@ -1,11 +1,4 @@
--- ╔══════════════════════════════════════════════════════════╗
--- ║          ⚡ VIOLET THUNDER UI LIBRARY ⚡                  ║
--- ║       Animated • Glowing • Thunder-Themed               ║
--- ╚══════════════════════════════════════════════════════════╝
 
---// ─────────────────────────────────────────────────────────
---//  🎨 VIOLET THUNDER THEME CONFIGURATION
---// ─────────────────────────────────────────────────────────
 local Config = {
     main_color  = Color3.fromRGB(150, 60, 255),
     min_size    = Vector2.new(420, 320),
@@ -27,17 +20,13 @@ local Config = {
     tween_time  = 0.12,
 }
 
---// ─────────────────────────────────────────────────────────
---//  CLEANUP: destroy any previous instance of this GUI
---// ─────────────────────────────────────────────────────────
+
 do
     local existing = game:GetService("CoreGui"):FindFirstChild("imgui")
     if existing then existing:Destroy() end
 end
 
---// ─────────────────────────────────────────────────────────
---//  SERVICES
---// ─────────────────────────────────────────────────────────
+
 local UserInputService = game:GetService("UserInputService")
 local TweenService     = game:GetService("TweenService")
 local RunService       = game:GetService("RunService")
@@ -45,16 +34,12 @@ local Players          = game:GetService("Players")
 local LocalPlayer      = Players.LocalPlayer
 local Mouse            = LocalPlayer:GetMouse()
 
---// ─────────────────────────────────────────────────────────
---//  ROOT GUI
---// ─────────────────────────────────────────────────────────
+
 local Root = Instance.new("ScreenGui")
 Root.Name   = "imgui"
 Root.Parent = game:GetService("CoreGui")
 
---// ─────────────────────────────────────────────────────────
---//  PREFABS CONTAINER
---// ─────────────────────────────────────────────────────────
+
 local Prefabs = Instance.new("Frame")
 Prefabs.Name                  = "Prefabs"
 Prefabs.Parent                = Root
@@ -62,7 +47,7 @@ Prefabs.BackgroundColor3      = Color3.new(1, 1, 1)
 Prefabs.Size                  = UDim2.new(0, 100, 0, 100)
 Prefabs.Visible               = false
 
---// ─────── Prefab: Label ────────────────────────────────────
+
 local PrefabLabel = Instance.new("TextLabel")
 PrefabLabel.Name                  = "Label"
 PrefabLabel.Parent                = Prefabs
@@ -75,7 +60,7 @@ PrefabLabel.TextColor3            = Color3.fromRGB(230, 200, 255)
 PrefabLabel.TextSize              = 14
 PrefabLabel.TextXAlignment        = Enum.TextXAlignment.Left
 
---// ─────── Prefab: Window ───────────────────────────────────
+
 local PrefabWindow = Instance.new("ImageLabel")
 PrefabWindow.Name                  = "Window"
 PrefabWindow.Parent                = Prefabs
@@ -117,7 +102,7 @@ PrefabBarToggle.BackgroundTransparency = 1
 PrefabBarToggle.Position              = UDim2.new(0, 5, 0, -2)
 PrefabBarToggle.Size                  = UDim2.new(0, 20, 0, 20)
 PrefabBarToggle.ZIndex                = 2
-PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=98003173280742"
+PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=104874871395979"
 
 local PrefabBarBase = Instance.new("ImageLabel")
 PrefabBarBase.Name             = "Base"
@@ -656,9 +641,7 @@ PrefabCPSatIndicator.BorderSizePixel  = 0
 PrefabCPSatIndicator.Size             = UDim2.new(0, 20, 0, 2)
 PrefabCPSatIndicator.ZIndex           = 2
 
---// ─────────────────────────────────────────────────────────
---//  WINDOWS CONTAINER
---// ─────────────────────────────────────────────────────────
+
 local WindowsContainer = Instance.new("Frame")
 WindowsContainer.Name                  = "Windows"
 WindowsContainer.Parent                = Root
@@ -669,17 +652,13 @@ WindowsContainer.Size                  = UDim2.new(1, 20, 1, -20)
 
 script.Parent = Root
 
---// ─────────────────────────────────────────────────────────
---//  STATE
---// ─────────────────────────────────────────────────────────
+
 local bindingActive = false
 local connections   = {}
 local windowCount   = 0
 local dropdownOpen  = false
 
---// ─────────────────────────────────────────────────────────
---//  UTILITIES
---// ─────────────────────────────────────────────────────────
+
 local function trackConnection(conn)
     table.insert(connections, conn)
     return conn
@@ -805,9 +784,7 @@ local function playRipple(frame, screenX, screenY)
     end)
 end
 
---// ─────────────────────────────────────────────────────────
---//  GLOBAL TOGGLE (RightShift shows/hides the entire UI)
---// ─────────────────────────────────────────────────────────
+
 trackConnection(UserInputService.InputBegan:Connect(function(input, processed)
     local toggleKey = typeof(Config.toggle_key) == "EnumItem"
         and Config.toggle_key
@@ -818,9 +795,7 @@ trackConnection(UserInputService.InputBegan:Connect(function(input, processed)
     end
 end))
 
---// ─────────────────────────────────────────────────────────
---//  LAYOUT HELPER
---// ─────────────────────────────────────────────────────────
+
 local function snapWindowsToAbsolute()
     local layout = Prefabs:FindFirstChild("UIListLayout"):Clone()
     layout.Parent = WindowsContainer
@@ -839,18 +814,14 @@ local function snapWindowsToAbsolute()
     end
 end
 
---// ─────────────────────────────────────────────────────────
---//  LIBRARY TABLE
---// ─────────────────────────────────────────────────────────
+
 local Library = {}
 
 function Library:FormatWindows()
     snapWindowsToAbsolute()
 end
 
---// ─────────────────────────────────────────────────────────
---//  Library:CreateMinimizer
---// ─────────────────────────────────────────────────────────
+
 function Library:CreateMinimizer(MiniConfig)
     MiniConfig = MiniConfig or {}
 
@@ -916,7 +887,7 @@ function Library:CreateMinimizer(MiniConfig)
     btnStroke.Color           = Color3.fromRGB(130, 50, 220)
     btnStroke.Parent          = btn
 
-    -- ⚡ Pulse border glow
+   
     task.spawn(function()
         local pulseColors = {
             Color3.fromRGB(200, 100, 255),
@@ -963,7 +934,7 @@ function Library:CreateMinimizer(MiniConfig)
         TweenService:Create(icon, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { ImageColor3 = Color3.fromRGB(200, 160, 255) }):Play()
     end)
 
-    --// ── Drag + Click logic (FIXED: uses btn.InputEnded not global) ──
+   
     local hasDragged      = false
     local isPressed       = false
     local pressStart      = nil
@@ -983,7 +954,7 @@ function Library:CreateMinimizer(MiniConfig)
         end
     end)
 
-    -- ✅ KEY FIX: scoped to btn, not UserInputService global
+    
     btn.InputEnded:Connect(function(input)
         if not isPressed then return end
         if input.UserInputType ~= Enum.UserInputType.MouseButton1
@@ -1005,7 +976,7 @@ function Library:CreateMinimizer(MiniConfig)
                     TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
                     { Size = btnSize }):Play()
             end)
-            -- Toggle main UI
+            
             Root.Enabled = not Root.Enabled
         end
     end)
@@ -1036,9 +1007,7 @@ function Library:CreateMinimizer(MiniConfig)
     return holder
 end
 
---// ─────────────────────────────────────────────────────────
---//  Library:AddWindow
---// ─────────────────────────────────────────────────────────
+
 function Library:AddWindow(title, options)
     windowCount = windowCount + 1
     local isMinimized = false
@@ -1131,7 +1100,7 @@ function Library:AddWindow(title, options)
         win.ImageTransparency = options.background_transparency
         applyColor(win, options.background, 45)
 
-        -- ── Animated glowing border stroke ──────────────────
+        
         local glowStroke        = Instance.new("UIStroke")
         glowStroke.Color        = Color3.fromRGB(180, 90, 255)
         glowStroke.Thickness    = 2.5
@@ -1281,7 +1250,7 @@ function Library:AddWindow(title, options)
                     { BackgroundTransparency = 1 }):Play()
                 local prevLine = activeBtn:FindFirstChild("ActiveLine")
                 if prevLine then prevLine.BackgroundTransparency = 1 end
-                -- Remove glow border from previous tab
+               
                 local prevStroke = activeBtn:FindFirstChild("ActiveStroke")
                 if prevStroke then
                     TweenService:Create(prevStroke,
@@ -1310,7 +1279,7 @@ function Library:AddWindow(title, options)
             local activeLine = tabBtn:FindFirstChild("ActiveLine")
             if activeLine then activeLine.BackgroundTransparency = 0 end
 
-            -- ✦ Add glowing crystal border around active tab
+            
             local existingStroke = tabBtn:FindFirstChild("ActiveStroke")
             if not existingStroke then
                 local activeStroke        = Instance.new("UIStroke")
@@ -1320,12 +1289,12 @@ function Library:AddWindow(title, options)
                 activeStroke.Transparency = 1
                 activeStroke.Parent       = tabBtn
 
-                -- Fade in the stroke
+               
                 TweenService:Create(activeStroke,
                     TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
                     { Transparency = 0 }):Play()
 
-                -- Pulse it continuously while active
+                
                 task.spawn(function()
                     local pulseColors = {
                         Color3.fromRGB(220, 130, 255),
@@ -1347,7 +1316,7 @@ function Library:AddWindow(title, options)
                     end
                 end)
 
-                -- 4 corner crystal dots (top-left, top-right, bottom-left, bottom-right)
+              
                 local cornerPositions = {
                     { x = 0, y = 0,   ax = 0.5, ay = 0.5 },
                     { x = 1, y = 0,   ax = 0.5, ay = 0.5 },
@@ -1355,7 +1324,7 @@ function Library:AddWindow(title, options)
                     { x = 1, y = 1,   ax = 0.5, ay = 0.5 },
                 }
                 for _, cp in ipairs(cornerPositions) do
-                    -- Cross star at each corner
+                   
                     local dot = Instance.new("Frame")
                     dot.Name                   = "CornerGlow"
                     dot.Parent                 = tabBtn
@@ -1388,7 +1357,7 @@ function Library:AddWindow(title, options)
                     vBar.ZIndex               = dot.ZIndex
                     Instance.new("UICorner", vBar).CornerRadius = UDim.new(1, 0)
 
-                    -- Pulse corner dots in/out
+                    
                     task.spawn(function()
                         while dot and dot.Parent and activeBtn == tabBtn do
                             TweenService:Create(dot,
@@ -1446,14 +1415,14 @@ function Library:AddWindow(title, options)
             tabBtnStroke.Transparency = 0.2
             tabBtnStroke.Parent       = tabBtn
 
-            -- ✨ Crystal cross-star sparkles (like the glitch glow in screenshot)
+           
             local starColors = {
                 Color3.fromRGB(255, 255, 255),
                 Color3.fromRGB(220, 180, 255),
                 Color3.fromRGB(180, 100, 255),
                 Color3.fromRGB(255, 230, 255),
             }
-            -- Each star = 2 thin rectangles crossed (horizontal + vertical)
+           
             local function makeStar(parent, px, py, sz, zidx)
                 local col = starColors[math.random(1, #starColors)]
                 local root = Instance.new("Frame")
@@ -1466,7 +1435,7 @@ function Library:AddWindow(title, options)
                 root.Position               = UDim2.new(px, 0, py, 0)
                 root.ZIndex                 = zidx
 
-                -- Horizontal bar
+                
                 local h = Instance.new("Frame")
                 h.Parent                 = root
                 h.BackgroundColor3       = col
@@ -1506,9 +1475,9 @@ function Library:AddWindow(title, options)
                 table.insert(allStars, { root=root, h=h, v=v })
             end
 
-            -- Animate: each star independently twinkles, scales up/down, and rotates slightly
+           
             task.spawn(function()
-                -- stagger starts
+              
                 for i, star in ipairs(allStars) do
                     task.wait(math.random() * 1.5)
                     task.spawn(function()
@@ -1516,7 +1485,7 @@ function Library:AddWindow(title, options)
                             local fadeIn  = 0.2 + math.random() * 0.2
                             local hold    = 0.3 + math.random() * 0.5
                             local fadeOut = 0.2 + math.random() * 0.15
-                            -- scale up + fade in
+                            
                             TweenService:Create(star.root,
                                 TweenInfo.new(fadeIn, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
                                 { Size = UDim2.fromOffset(starPositions[i].sz * 1.6, starPositions[i].sz * 1.6), Rotation = math.random(-25, 25) }):Play()
@@ -1526,7 +1495,7 @@ function Library:AddWindow(title, options)
                                 { BackgroundTransparency = 0 }):Play()
                             task.wait(fadeIn + hold)
                             if not star.root or not star.root.Parent then return end
-                            -- scale down + fade out
+                           
                             TweenService:Create(star.root,
                                 TweenInfo.new(fadeOut, Enum.EasingStyle.Sine, Enum.EasingDirection.In),
                                 { Size = UDim2.fromOffset(starPositions[i].sz * 0.4, starPositions[i].sz * 0.4) }):Play()
@@ -2180,9 +2149,6 @@ function Library:AddWindow(title, options)
     return windowAPI, win
 end
 
---// ─────────────────────────────────────────────────────────
---//  Cleanup on script removal
---// ─────────────────────────────────────────────────────────
 script.AncestryChanged:Connect(function()
     if not script.Parent then
         cleanup()
@@ -2190,23 +2156,3 @@ script.AncestryChanged:Connect(function()
 end)
 
 return Library
-
---[[
-    ── USAGE EXAMPLE ────────────────────────────────────────
-
-    local win = Library:AddWindow("My Window")
-    local tab = win:AddTab("Main")
-    tab:AddButton("Click me", function() print("clicked") end)
-
-    -- Create the minimizer button (call AFTER AddWindow)
-    Library:CreateMinimizer({
-        -- All fields are optional:
-        Icon         = "rbxassetid://10734897102",  -- custom icon
-        Corner       = 14,          -- corner radius (px)
-        Transparency = 0,           -- button background transparency
-        Draggable    = true,         -- allow dragging the minimizer around
-        Size         = UDim2.fromOffset(36, 36),
-        Position     = UDim2.new(0, 300, 0, 20),
-        Visible      = true,
-    })
-]]
