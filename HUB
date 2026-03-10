@@ -1622,7 +1622,7 @@ function Library:AddWindow(title, options)
                 local btn    = Prefabs:FindFirstChild("Button"):Clone()
                 local target = contentFrame:FindFirstChild("TabScroller") or contentFrame
                 btn.Parent   = target
-                btn.Text     = label
+                btn.Text     = string.upper(label)
                 btn.Size     = UDim2.new(0, getTextWidth(btn), 0, 20)
                 btn.ZIndex   = btn.ZIndex + windowCount * 10
 
@@ -1647,7 +1647,7 @@ function Library:AddWindow(title, options)
                 local sw     = Prefabs:FindFirstChild("Switch"):Clone()
                 local target = contentFrame:FindFirstChild("TabScroller") or contentFrame
                 sw.Parent    = target
-                sw:FindFirstChild("Title").Text = label
+                sw:FindFirstChild("Title").Text = string.upper(label)
                 sw:FindFirstChild("Title").ZIndex = sw:FindFirstChild("Title").ZIndex + windowCount * 10
                 sw.ZIndex    = sw.ZIndex + windowCount * 10
 
@@ -1723,7 +1723,7 @@ function Library:AddWindow(title, options)
                 slTitle.ZIndex = slTitle.ZIndex + windowCount * 10
                 slFill.ZIndex  = slFill.ZIndex  + windowCount * 10
                 slValue.ZIndex = slValue.ZIndex + windowCount * 10
-                slTitle.Text   = label
+                slTitle.Text   = string.upper(label)
 
                 local mouseOverSlider = false
                 local sliderConn
@@ -1791,7 +1791,7 @@ function Library:AddWindow(title, options)
 
                 local target = contentFrame:FindFirstChild("TabScroller") or contentFrame
                 kb.Parent    = target
-                kbTitle.Text = "  " .. label
+                kbTitle.Text = "  " .. string.upper(label)
                 kb.Size      = UDim2.new(0, getTextWidth(kbTitle) + 80, 0, 20)
 
                 local keyAliases = {
@@ -1867,7 +1867,7 @@ function Library:AddWindow(title, options)
 
                 local target = contentFrame:FindFirstChild("TabScroller") or contentFrame
                 dd.Parent    = target
-                dd.Text      = "      " .. label
+                dd.Text      = "      " .. string.upper(label)
                 ddBox.Size   = UDim2.new(1, 0, 0, 0)
                 ddBox.Position = UDim2.new(0, 0, 0, 25)
                 dd.TextColor3 = Color3.new(1, 1, 1)
@@ -1923,7 +1923,7 @@ function Library:AddWindow(title, options)
 
                     local item = Prefabs:FindFirstChild("DropdownButton"):Clone()
                     item.Parent               = ddList
-                    item.Text                 = "      " .. itemName
+                    item.Text                 = "      " .. string.upper(itemName)
                     item.ZIndex               = item.ZIndex + windowCount * 10 + 5
                     item.BackgroundTransparency = 1
                     item.TextColor3           = Color3.new(1, 1, 1)
@@ -1962,7 +1962,7 @@ function Library:AddWindow(title, options)
 
                     item.MouseButton1Click:Connect(function()
                         if dropdownOpen then
-                            dd.Text      = "      [ " .. itemName .. " ]"
+                            dd.Text      = "      [ " .. string.upper(itemName) .. " ]"
                             dropdownOpen = false
                             isOpen       = false
                             if opensUp then
@@ -2116,7 +2116,7 @@ function Library:AddWindow(title, options)
 
                 local target = contentFrame:FindFirstChild("TabScroller") or contentFrame
                 folder.Parent = target
-                folderBtn.Text = "      " .. folderName
+                folderBtn.Text = "      " .. string.upper(folderName)
 
                 local folderBg = folderBtn:GetChildren()[1]
                 folderBg.ImageColor3 = options.main_color
