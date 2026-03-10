@@ -117,7 +117,7 @@ PrefabBarToggle.BackgroundTransparency = 1
 PrefabBarToggle.Position              = UDim2.new(0, 5, 0, -2)
 PrefabBarToggle.Size                  = UDim2.new(0, 20, 0, 20)
 PrefabBarToggle.ZIndex                = 2
-PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=98003173280742"
+PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=104874871395979"
 
 local PrefabBarBase = Instance.new("ImageLabel")
 PrefabBarBase.Name             = "Base"
@@ -1329,6 +1329,63 @@ function Library:AddWindow(title, options)
             tabBtnStroke.Thickness    = 1.5
             tabBtnStroke.Transparency = 0.2
             tabBtnStroke.Parent       = tabBtn
+
+            -- ✨ Small glitter sparkles on tab button
+            local glitterColors = {
+                Color3.fromRGB(255, 220, 255),
+                Color3.fromRGB(200, 130, 255),
+                Color3.fromRGB(255, 255, 255),
+                Color3.fromRGB(180, 90,  255),
+            }
+            local sparkleData = {
+                { x = 0.12, y = 0.25, size = 2 },
+                { x = 0.82, y = 0.20, size = 1.5 },
+                { x = 0.55, y = 0.75, size = 2 },
+                { x = 0.30, y = 0.65, size = 1.5 },
+                { x = 0.70, y = 0.50, size = 1 },
+            }
+            local sparkles = {}
+            for _, sd in ipairs(sparkleData) do
+                local sp = Instance.new("Frame")
+                sp.Name                   = "Sparkle"
+                sp.Parent                 = tabBtn
+                sp.BackgroundColor3       = glitterColors[math.random(1, #glitterColors)]
+                sp.BackgroundTransparency = 1
+                sp.BorderSizePixel        = 0
+                sp.Size                   = UDim2.fromOffset(sd.size, sd.size)
+                sp.Position               = UDim2.new(sd.x, 0, sd.y, 0)
+                sp.ZIndex                 = tabBtn.ZIndex + 3
+                local spCorner = Instance.new("UICorner")
+                spCorner.CornerRadius = UDim.new(1, 0)
+                spCorner.Parent = sp
+                table.insert(sparkles, sp)
+            end
+            -- Animate sparkles: random twinkle in/out
+            task.spawn(function()
+                local offsets = {}
+                for i = 1, #sparkles do
+                    offsets[i] = math.random() * 2.5  -- stagger start times
+                end
+                while tabBtn and tabBtn.Parent do
+                    for i, sp in ipairs(sparkles) do
+                        task.spawn(function()
+                            task.wait(offsets[i])
+                            if not sp or not sp.Parent then return end
+                            -- Fade in
+                            TweenService:Create(sp,
+                                TweenInfo.new(0.35 + math.random() * 0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+                                { BackgroundTransparency = 0.1 }):Play()
+                            task.wait(0.35 + math.random() * 0.4)
+                            if not sp or not sp.Parent then return end
+                            -- Fade out
+                            TweenService:Create(sp,
+                                TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.In),
+                                { BackgroundTransparency = 1 }):Play()
+                        end)
+                    end
+                    task.wait(1.8 + math.random() * 1.2)
+                end
+            end)
 
             local activeLine              = Instance.new("Frame")
             activeLine.Name               = "ActiveLine"
