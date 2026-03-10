@@ -978,74 +978,79 @@ function Library:CreateMinimizer(MiniConfig)
         TweenService:Create(icon, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { ImageColor3 = Color3.fromRGB(200, 160, 255) }):Play()
     end)
 
-    -- ── Drag logic ─────────────────────────────────────────
-    -- hasDragged stays true until AFTER MouseButton1Click fires,
-    -- so the click handler can check it and skip the toggle.
-    local hasDragged  = false
-    local pressStart  = nil   -- mouse position when button was pressed
-    local dragOffset  = nil   -- holder.Position when button was pressed
-    local DRAG_THRESH = 5     -- pixels of movement before it counts as a drag
+    -- ── Drag + Click logic ─────────────────────────────────
+    -- We track everything in InputBegan/InputEnded to avoid any
+    -- race condition between MouseButton1Click and task.defer.
+    -- AbsolutePosition is used so UDim2 scale values never cause jumps.
+    local hasDragged      = false
+    local isPressed       = false
+    local pressStart      = nil   -- screen pos (Vector2) when pressed
+    local dragStartAbsPos = nil   -- holder AbsolutePosition when pressed
+    local DRAG_THRESH     = 6     -- pixels before it counts as a drag
 
+    -- Record press start
+    btn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+            isPressed       = true
+            hasDragged      = false
+            pressStart      = UserInputService:GetMouseLocation()
+            dragStartAbsPos = Vector2.new(
+                holder.AbsolutePosition.X,
+                holder.AbsolutePosition.Y
+            )
+        end
+    end)
+
+    -- Move holder while dragging (only when Draggable = true)
     if draggableWhole then
-        btn.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1
-            or input.UserInputType == Enum.UserInputType.Touch then
-                local pos   = input.Position
-                pressStart  = Vector2.new(pos.X, pos.Y)
-                dragOffset  = holder.Position
-                hasDragged  = false
-            end
-        end)
-
         RunService.Heartbeat:Connect(function()
-            if not pressStart then return end
+            if not isPressed or not pressStart then return end
             if not holder or not holder.Parent then return end
+
             local current = UserInputService:GetMouseLocation()
             local delta   = current - pressStart
 
-            -- Only start moving once the threshold is exceeded
+            -- Don't start moving until threshold exceeded
             if not hasDragged and delta.Magnitude < DRAG_THRESH then return end
             hasDragged = true
 
-            local newX     = dragOffset.X.Offset + delta.X
-            local newY     = dragOffset.Y.Offset + delta.Y
+            -- Use absolute start pos so scale-based UDim2 never causes a jump
+            local newX     = dragStartAbsPos.X + delta.X
+            local newY     = dragStartAbsPos.Y + delta.Y
             local viewport = workspace.Camera.ViewportSize
             local size     = holder.AbsoluteSize
-            holder.Position = UDim2.new(0,
-                math.clamp(newX, 0, viewport.X - size.X), 0,
-                math.clamp(newY, 0, viewport.Y - size.Y))
-        end)
-
-        -- Clear press state on mouse release
-        UserInputService.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1
-            or input.UserInputType == Enum.UserInputType.Touch then
-                -- Delay clear so MouseButton1Click fires first and can read hasDragged
-                task.defer(function()
-                    pressStart = nil
-                    dragOffset = nil
-                    hasDragged = false
-                end)
-            end
+            holder.Position = UDim2.fromOffset(
+                math.clamp(newX, 0, viewport.X - size.X),
+                math.clamp(newY, 0, viewport.Y - size.Y)
+            )
         end)
     end
 
-    -- ── Click: toggle the entire UI ─────────────────────────
-    btn.MouseButton1Click:Connect(function()
-        if hasDragged then return end   -- was a drag, not a click
+    -- On release: either toggle UI (clean click) or just stop dragging
+    UserInputService.InputEnded:Connect(function(input)
+        if not isPressed then return end
+        if input.UserInputType ~= Enum.UserInputType.MouseButton1
+        and input.UserInputType ~= Enum.UserInputType.Touch then return end
 
-        -- Quick scale-pulse feedback
-        TweenService:Create(holder,
-            TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-            { Size = UDim2.fromOffset(30, 30) }):Play()
-        task.wait(0.08)
-        TweenService:Create(holder,
-            TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-            { Size = btnSize }):Play()
+        local wasDrag = hasDragged
+        isPressed       = false
+        hasDragged      = false
+        pressStart      = nil
+        dragStartAbsPos = nil
 
-        -- Toggle the main GUI; the minimizer itself is unaffected
-        -- because it lives in its own separate ScreenGui.
-        Root.Enabled = not Root.Enabled
+        if not wasDrag then
+            -- Clean click: pulse animation then toggle
+            TweenService:Create(holder,
+                TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                { Size = UDim2.fromOffset(30, 30) }):Play()
+            task.delay(0.08, function()
+                TweenService:Create(holder,
+                    TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+                    { Size = btnSize }):Play()
+            end)
+            Root.Enabled = not Root.Enabled
+        end
     end)
 
     self.Minimizer = holder
@@ -1174,17 +1179,6 @@ function Library:AddWindow(title, options)
             end
         end)
 
-        local tabs = win:FindFirstChild("Tabs")
-        barToggle.MouseButton1Click:Connect(function()
-            local tabsVisible = tabs.Visible
-            if tabsVisible then
-                tabs.Visible = false
-                tween(win, { Size = UDim2.new(0, win.AbsoluteSize.X, 0, barHeight) }, options.tween_time)
-            else
-                tabs.Visible = true
-                win.Size = UDim2.new(0, win.AbsoluteSize.X, 0, options.min_size.Y)
-            end
-        end)
     end
 
     local resizer    = win:WaitForChild("Resizer")
@@ -1284,7 +1278,6 @@ function Library:AddWindow(title, options)
         local tabScrollF  = tabSelBar:FindFirstChild("TabScrolling")
         local tabBtnsF    = tabScrollF:FindFirstChild("TabButtons")
         local activeBtn   = nil
-        local particleConn = nil
 
         local function refreshTabLayout()
             local totalW  = 0
@@ -1300,189 +1293,36 @@ function Library:AddWindow(title, options)
             end
         end
 
-        local function emitTabParticles(btn)
-            if btn ~= activeBtn then return end
-            local size = btn.AbsoluteSize
-            if size.X < 5 or size.Y < 5 then return end
-
-            task.spawn(function()
-                local x1 = math.random(2, math.max(3, size.X - 2))
-                local y1 = math.random(1, math.max(2, size.Y - 1))
-                local x2 = x1 + math.random(-12, 12)
-                local y2 = y1 + math.random(-8,  8)
-
-                local arcColors = {
-                    Color3.fromRGB(80,  180, 255),
-                    Color3.fromRGB(120, 210, 255),
-                    Color3.fromRGB(200, 240, 255),
-                    Color3.fromRGB(60,  140, 255),
-                }
-                local col = arcColors[math.random(#arcColors)]
-
-                local segs = math.random(2, 4)
-                local pts  = { Vector2.new(x1, y1) }
-                for s = 1, segs - 1 do
-                    local t  = s / segs
-                    local mx = x1 + (x2 - x1) * t + math.random(-5, 5)
-                    local my = y1 + (y2 - y1) * t + math.random(-4, 4)
-                    table.insert(pts, Vector2.new(mx, my))
-                end
-                table.insert(pts, Vector2.new(x2, y2))
-
-                local segFrames = {}
-                for s = 1, #pts - 1 do
-                    local p1 = pts[s];  local p2 = pts[s+1]
-                    local dx = p2.X - p1.X;  local dy = p2.Y - p1.Y
-                    local ln = math.sqrt(dx*dx + dy*dy)
-                    if ln < 0.5 then continue end
-                    local ang = math.deg(math.atan2(dy, dx))
-
-                    local seg              = Instance.new("Frame")
-                    seg.Size               = UDim2.new(0, ln, 0, math.random(1, 2))
-                    seg.Position           = UDim2.new(0, p1.X, 0, p1.Y)
-                    seg.Rotation           = ang
-                    seg.BackgroundColor3   = col
-                    seg.BackgroundTransparency = 0.05
-                    seg.BorderSizePixel    = 0
-                    seg.ZIndex             = btn.ZIndex + 20
-                    seg.AnchorPoint        = Vector2.new(0, 0.5)
-                    seg.Parent             = btn
-                    table.insert(segFrames, seg)
-
-                    local glow             = Instance.new("Frame")
-                    glow.Size              = UDim2.new(0, ln, 0, math.random(3, 6))
-                    glow.Position          = seg.Position
-                    glow.Rotation          = ang
-                    glow.BackgroundColor3  = col
-                    glow.BackgroundTransparency = 0.6
-                    glow.BorderSizePixel   = 0
-                    glow.ZIndex            = btn.ZIndex + 19
-                    glow.AnchorPoint       = Vector2.new(0, 0.5)
-                    glow.Parent            = btn
-                    table.insert(segFrames, glow)
-                end
-
-                task.delay(0.07, function()
-                    for _, f in ipairs(segFrames) do
-                        if f and f.Parent then
-                            TweenService:Create(f,
-                                TweenInfo.new(0.12, Enum.EasingStyle.Linear),
-                                { BackgroundTransparency = 1 }):Play()
-                        end
-                    end
-                    task.delay(0.13, function()
-                        for _, f in ipairs(segFrames) do
-                            if f and f.Parent then f:Destroy() end
-                        end
-                    end)
-                end)
-            end)
-
-            task.spawn(function()
-                local sparkColors = {
-                    Color3.fromRGB(80,  180, 255),
-                    Color3.fromRGB(180, 230, 255),
-                    Color3.fromRGB(60,  140, 255),
-                }
-                local sp             = Instance.new("Frame")
-                sp.Size              = UDim2.new(0, math.random(2, 4), 0, math.random(2, 4))
-                sp.AnchorPoint       = Vector2.new(0.5, 0.5)
-                sp.BackgroundColor3  = sparkColors[math.random(#sparkColors)]
-                sp.BackgroundTransparency = 0.1
-                sp.BorderSizePixel   = 0
-                sp.ZIndex            = btn.ZIndex + 22
-                sp.Position          = UDim2.new(
-                    math.random(5, math.max(6, size.X - 5)) / math.max(1, size.X), 0,
-                    math.random(1, math.max(2, size.Y - 1)) / math.max(1, size.Y), 0
-                )
-                sp.Parent = btn
-                Instance.new("UICorner", sp).CornerRadius = UDim.new(1, 0)
-
-                local ex = sp.Position.X.Scale + (math.random(-15, 15) / math.max(1, size.X))
-                local ey = sp.Position.Y.Scale + (math.random(-10, 10) / math.max(1, size.Y))
-                TweenService:Create(sp,
-                    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    { Position = UDim2.new(ex, 0, ey, 0), BackgroundTransparency = 1 }):Play()
-
-                task.delay(0.32, function()
-                    if sp and sp.Parent then sp:Destroy() end
-                end)
-            end)
-        end
-
-        local function startParticles()
-            if particleConn then particleConn:Disconnect() end
-            particleConn = RunService.Heartbeat:Connect(function()
-                if activeBtn and activeBtn.Parent then
-                    emitTabParticles(activeBtn)
-                    task.wait(0.2)
-                end
-            end)
-        end
-
         local function selectTab(tabBtn, contentFrame)
-            if isMinimized then return end
-
+            -- Deselect previous
             if activeBtn and activeBtn ~= tabBtn then
-                local outline = activeBtn:FindFirstChild("TabOutline")
-                if outline then outline.Visible = false end
-                local prevStroke = activeBtn:FindFirstChild("ThunderStroke")
-                if prevStroke then prevStroke:Destroy() end
-                activeBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+                activeBtn.TextColor3 = Color3.fromRGB(160, 160, 160)
+                activeBtn.BackgroundColor3 = Color3.fromRGB(60, 10, 130)
+                TweenService:Create(activeBtn,
+                    TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    { BackgroundTransparency = 1 }):Play()
+                local prevLine = activeBtn:FindFirstChild("ActiveLine")
+                if prevLine then prevLine.BackgroundTransparency = 1 end
             end
 
+            -- Hide all content frames
             for _, child in ipairs(tabsFrame:GetChildren()) do
                 if child:IsA("Frame") then child.Visible = false end
             end
 
             activeBtn = tabBtn
 
-            local outline = tabBtn:FindFirstChild("TabOutline")
-            if outline then
-                outline.Visible     = true
-                outline.BorderColor3 = options.main_color
-            end
+            -- Highlight: purple fill + bright white text + bottom accent line
+            tabBtn.BackgroundColor3 = Color3.fromRGB(100, 20, 200)
+            TweenService:Create(tabBtn,
+                TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                { BackgroundTransparency = 0.4 }):Play()
+            tabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-            local oldThunderStroke = tabBtn:FindFirstChild("ThunderStroke")
-            if oldThunderStroke then oldThunderStroke:Destroy() end
+            local activeLine = tabBtn:FindFirstChild("ActiveLine")
+            if activeLine then activeLine.BackgroundTransparency = 0 end
 
-            local thunderStroke        = Instance.new("UIStroke")
-            thunderStroke.Name         = "ThunderStroke"
-            thunderStroke.Color        = Color3.fromRGB(80, 180, 255)
-            thunderStroke.Thickness    = 1.5
-            thunderStroke.Transparency = 0.0
-            thunderStroke.Parent       = tabBtn
-
-            task.spawn(function()
-                local blueShades = {
-                    Color3.fromRGB(80,  180, 255),
-                    Color3.fromRGB(180, 230, 255),
-                    Color3.fromRGB(60,  120, 255),
-                    Color3.fromRGB(140, 210, 255),
-                }
-                local bi = 1
-                while thunderStroke and thunderStroke.Parent and activeBtn == tabBtn do
-                    bi = (bi % #blueShades) + 1
-                    TweenService:Create(thunderStroke,
-                        TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                        { Color = blueShades[bi], Transparency = 0.0 }):Play()
-                    task.wait(0.4)
-                    TweenService:Create(thunderStroke,
-                        TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                        { Color = Color3.fromRGB(40, 100, 220), Transparency = 0.4 }):Play()
-                    task.wait(0.4)
-                end
-                if thunderStroke and thunderStroke.Parent then thunderStroke:Destroy() end
-            end)
-
-            if activeBtn and activeBtn ~= tabBtn then
-                local prevStroke = activeBtn:FindFirstChild("ThunderStroke")
-                if prevStroke then prevStroke:Destroy() end
-            end
-
-            tabBtn.TextColor3  = Color3.new(1, 1, 1)
             contentFrame.Visible = true
-            startParticles()
         end
 
         function windowAPI:AddTab(tabName)
@@ -1495,35 +1335,40 @@ function Library:AddWindow(title, options)
             tabBtn.Text             = tabName
             tabBtn.Size             = UDim2.new(0, getTextWidth(tabBtn) + 20, 0, 18)
             tabBtn.ZIndex           = tabBtn.ZIndex + windowCount * 10
+            tabBtn.BackgroundColor3 = Color3.fromRGB(60, 10, 130)
             tabBtn.BackgroundTransparency = 1
-            tabBtn.TextColor3       = Color3.fromRGB(200, 200, 200)
+            tabBtn.TextColor3       = Color3.fromRGB(180, 140, 220)
             tabBtn.TextSize         = 13
             tabBtn.Font             = Enum.Font.FredokaOne
 
+            -- Hide the ImageLabel bg (we use BackgroundColor3 directly)
             local tabBtnBg = tabBtn:GetChildren()[1]
-            tabBtnBg.ZIndex             = tabBtn.ZIndex + windowCount * 10
-            tabBtnBg.ImageTransparency  = 1
+            tabBtnBg.ZIndex            = tabBtn.ZIndex + windowCount * 10
+            tabBtnBg.ImageTransparency = 1
 
+            -- Rounded corners
             local tabBtnCorner        = Instance.new("UICorner")
-            tabBtnCorner.CornerRadius = UDim.new(0, 4)
+            tabBtnCorner.CornerRadius = UDim.new(0, 5)
             tabBtnCorner.Parent       = tabBtn
 
-            local tabBtnStroke           = Instance.new("UIStroke")
-            tabBtnStroke.Color           = Color3.fromRGB(90, 20, 180)
-            tabBtnStroke.Thickness       = 1.2
-            tabBtnStroke.Transparency    = 0.4
-            tabBtnStroke.Parent          = tabBtn
+            -- Purple border stroke (always visible, shows the pill shape)
+            local tabBtnStroke        = Instance.new("UIStroke")
+            tabBtnStroke.Color        = Color3.fromRGB(120, 30, 220)
+            tabBtnStroke.Thickness    = 1.5
+            tabBtnStroke.Transparency = 0.2
+            tabBtnStroke.Parent       = tabBtn
 
-            local outline              = Instance.new("Frame")
-            outline.Name               = "TabOutline"
-            outline.Size               = UDim2.new(1, 0, 1, 0)
-            outline.BackgroundTransparency = 1
-            outline.BorderSizePixel    = 2
-            outline.BorderColor3       = options.main_color
-            outline.ZIndex             = tabBtn.ZIndex + 10
-            outline.Visible            = false
-            Instance.new("UICorner", outline).CornerRadius = UDim.new(0, 4)
-            outline.Parent             = tabBtn
+            -- Bottom accent line (hidden until active)
+            local activeLine              = Instance.new("Frame")
+            activeLine.Name               = "ActiveLine"
+            activeLine.Size               = UDim2.new(0.7, 0, 0, 2)
+            activeLine.Position           = UDim2.new(0.15, 0, 1, -2)
+            activeLine.BackgroundColor3   = Color3.fromRGB(180, 90, 255)
+            activeLine.BackgroundTransparency = 1
+            activeLine.BorderSizePixel    = 0
+            activeLine.ZIndex             = tabBtn.ZIndex + 5
+            Instance.new("UICorner", activeLine).CornerRadius = UDim.new(1, 0)
+            activeLine.Parent             = tabBtn
 
             local contentFrame = Prefabs:FindFirstChild("Tab"):Clone()
             contentFrame.Parent               = tabsFrame
@@ -1558,10 +1403,10 @@ function Library:AddWindow(title, options)
 
             tabBtn.MouseButton1Click:Connect(function() selectTab(tabBtn, contentFrame) end)
             tabBtn.MouseEnter:Connect(function()
-                if tabBtn ~= activeBtn then tabBtn.TextColor3 = Color3.fromRGB(230, 230, 230) end
+                if tabBtn ~= activeBtn then tabBtn.TextColor3 = Color3.fromRGB(220, 190, 255) end
             end)
             tabBtn.MouseLeave:Connect(function()
-                if tabBtn ~= activeBtn then tabBtn.TextColor3 = Color3.fromRGB(200, 200, 200) end
+                if tabBtn ~= activeBtn then tabBtn.TextColor3 = Color3.fromRGB(180, 140, 220) end
             end)
 
             if #tabBtnsF:GetChildren() == 2 then
@@ -1572,7 +1417,6 @@ function Library:AddWindow(title, options)
                 if not tabBtn.Parent then
                     if activeBtn == tabBtn then
                         activeBtn = nil
-                        if particleConn then particleConn:Disconnect(); particleConn = nil end
                     end
                 end
             end)
@@ -2165,3 +2009,4 @@ script.AncestryChanged:Connect(function()
 end)
 
 return Library
+
