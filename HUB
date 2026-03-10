@@ -850,25 +850,17 @@ end
 
 --// ─────────────────────────────────────────────────────────
 --//  Library:CreateMinimizer
---//  Shows a small floating button that toggles Root.Enabled.
---//  Lives in its OWN ScreenGui so it stays visible when the
---//  main GUI is hidden.
---//  Supports: Icon, Corner, Transparency, Draggable, Size,
---//            Position, Visible config keys.
 --// ─────────────────────────────────────────────────────────
 function Library:CreateMinimizer(MiniConfig)
     MiniConfig = MiniConfig or {}
 
-    -- Return existing minimizer if it's still alive
     if self.Minimizer and self.Minimizer.Parent then
         return self.Minimizer
     end
 
-    -- Detect touch/mobile input
     local isMobile = UserInputService.TouchEnabled
         and not UserInputService.MouseEnabled
 
-    -- Resolve icon asset
     local iconAsset = "rbxassetid://10734897102"
     if type(MiniConfig.Icon) == "string" and MiniConfig.Icon ~= "" then
         if string.match(MiniConfig.Icon, "^rbxassetid://%d+$") then
@@ -882,41 +874,36 @@ function Library:CreateMinimizer(MiniConfig)
     local draggableWhole         = (MiniConfig.Draggable == true)
     local btnSize                = MiniConfig.Size or UDim2.fromOffset(36, 36)
 
-    -- Default positions differ for mobile vs desktop
     local defaultPos = isMobile
         and UDim2.new(0.45, 0, 0.025, 0)
         or  UDim2.new(0, 300, 0, 20)
 
-    -- ── OWN ScreenGui so it's NEVER hidden by Root.Enabled ──
-    -- This is the key fix: the minimizer lives outside Root entirely.
     local miniGui          = Instance.new("ScreenGui")
     miniGui.Name           = "VioletThunderMiniGui"
-    miniGui.DisplayOrder   = 1001   -- always on top of Root (1000)
+    miniGui.DisplayOrder   = 1001
     miniGui.ResetOnSpawn   = false
     miniGui.IgnoreGuiInset = true
     miniGui.Parent         = game:GetService("CoreGui")
 
-    -- ── Holder frame (invisible container) ─────────────────
     local holder = Instance.new("Frame")
     holder.Name                   = "VioletThunderMinimizer"
-    holder.Parent                 = miniGui              -- parented to its own GUI
+    holder.Parent                 = miniGui
     holder.Size                   = btnSize
     holder.Position               = MiniConfig.Position or defaultPos
     holder.BackgroundTransparency = 1
     holder.ZIndex                 = 100
     holder.Visible                = (MiniConfig.Visible ~= false)
 
-    -- ── Button ─────────────────────────────────────────────
     local btn = Instance.new("TextButton")
-    btn.Name                  = "MinimizerButton"
-    btn.Parent                = holder
-    btn.Size                  = UDim2.new(1, 0, 1, 0)
-    btn.BorderSizePixel       = 0
+    btn.Name                   = "MinimizerButton"
+    btn.Parent                 = holder
+    btn.Size                   = UDim2.new(1, 0, 1, 0)
+    btn.BorderSizePixel        = 0
     btn.BackgroundTransparency = backgroundTransparency
-    btn.BackgroundColor3      = Color3.fromRGB(28, 12, 55)
-    btn.AutoButtonColor       = true
-    btn.ZIndex                = holder.ZIndex + 1
-    btn.Text                  = ""
+    btn.BackgroundColor3       = Color3.fromRGB(28, 12, 55)
+    btn.AutoButtonColor        = true
+    btn.ZIndex                 = holder.ZIndex + 1
+    btn.Text                   = ""
 
     local btnCorner = Instance.new("UICorner")
     btnCorner.CornerRadius = UDim.new(0, cornerRadius or (isMobile and 12 or 14))
@@ -929,7 +916,7 @@ function Library:CreateMinimizer(MiniConfig)
     btnStroke.Color           = Color3.fromRGB(130, 50, 220)
     btnStroke.Parent          = btn
 
-    -- ⚡ Pulse the border glow
+    -- ⚡ Pulse border glow
     task.spawn(function()
         local pulseColors = {
             Color3.fromRGB(200, 100, 255),
@@ -951,24 +938,22 @@ function Library:CreateMinimizer(MiniConfig)
         end
     end)
 
-    -- Icon
     local icon = Instance.new("ImageLabel")
-    icon.Name                 = "Icon"
-    icon.Parent               = btn
-    icon.Image                = iconAsset
-    icon.Size                 = UDim2.new(0.72, 0, 0.72, 0)
-    icon.Position             = UDim2.new(0.5, 0, 0.5, 0)
-    icon.AnchorPoint          = Vector2.new(0.5, 0.5)
+    icon.Name                   = "Icon"
+    icon.Parent                 = btn
+    icon.Image                  = iconAsset
+    icon.Size                   = UDim2.new(0.72, 0, 0.72, 0)
+    icon.Position               = UDim2.new(0.5, 0, 0.5, 0)
+    icon.AnchorPoint            = Vector2.new(0.5, 0.5)
     icon.BackgroundTransparency = 1
-    icon.ImageColor3          = Color3.fromRGB(200, 160, 255)
-    icon.ZIndex               = btn.ZIndex + 1
+    icon.ImageColor3            = Color3.fromRGB(200, 160, 255)
+    icon.ZIndex                 = btn.ZIndex + 1
 
     local iconAspect = Instance.new("UIAspectRatioConstraint")
     iconAspect.AspectRatio = 1
     iconAspect.AspectType  = Enum.AspectType.FitWithinMaxSize
     iconAspect.Parent      = icon
 
-    -- Hover glow
     btn.MouseEnter:Connect(function()
         TweenService:Create(btn,  TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { BackgroundColor3 = Color3.fromRGB(55, 20, 100) }):Play()
         TweenService:Create(icon, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { ImageColor3 = Color3.fromRGB(230, 200, 255) }):Play()
@@ -978,17 +963,13 @@ function Library:CreateMinimizer(MiniConfig)
         TweenService:Create(icon, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { ImageColor3 = Color3.fromRGB(200, 160, 255) }):Play()
     end)
 
-    -- ── Drag + Click logic ─────────────────────────────────
-    -- We track everything in InputBegan/InputEnded to avoid any
-    -- race condition between MouseButton1Click and task.defer.
-    -- AbsolutePosition is used so UDim2 scale values never cause jumps.
+    --// ── Drag + Click logic (FIXED: uses btn.InputEnded not global) ──
     local hasDragged      = false
     local isPressed       = false
-    local pressStart      = nil   -- screen pos (Vector2) when pressed
-    local dragStartAbsPos = nil   -- holder AbsolutePosition when pressed
-    local DRAG_THRESH     = 6     -- pixels before it counts as a drag
+    local pressStart      = nil
+    local dragStartAbsPos = nil
+    local DRAG_THRESH     = 6
 
-    -- Record press start
     btn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1
         or input.UserInputType == Enum.UserInputType.Touch then
@@ -1002,7 +983,33 @@ function Library:CreateMinimizer(MiniConfig)
         end
     end)
 
-    -- Move holder while dragging (only when Draggable = true)
+    -- ✅ KEY FIX: scoped to btn, not UserInputService global
+    btn.InputEnded:Connect(function(input)
+        if not isPressed then return end
+        if input.UserInputType ~= Enum.UserInputType.MouseButton1
+        and input.UserInputType ~= Enum.UserInputType.Touch then return end
+
+        local wasDrag   = hasDragged
+        isPressed       = false
+        hasDragged      = false
+        pressStart      = nil
+        dragStartAbsPos = nil
+
+        if not wasDrag then
+            -- Pulse animation
+            TweenService:Create(holder,
+                TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                { Size = UDim2.fromOffset(30, 30) }):Play()
+            task.delay(0.08, function()
+                TweenService:Create(holder,
+                    TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+                    { Size = btnSize }):Play()
+            end)
+            -- Toggle main UI
+            Root.Enabled = not Root.Enabled
+        end
+    end)
+
     if draggableWhole then
         RunService.Heartbeat:Connect(function()
             if not isPressed or not pressStart then return end
@@ -1011,11 +1018,9 @@ function Library:CreateMinimizer(MiniConfig)
             local current = UserInputService:GetMouseLocation()
             local delta   = current - pressStart
 
-            -- Don't start moving until threshold exceeded
             if not hasDragged and delta.Magnitude < DRAG_THRESH then return end
             hasDragged = true
 
-            -- Use absolute start pos so scale-based UDim2 never causes a jump
             local newX     = dragStartAbsPos.X + delta.X
             local newY     = dragStartAbsPos.Y + delta.Y
             local viewport = workspace.Camera.ViewportSize
@@ -1026,32 +1031,6 @@ function Library:CreateMinimizer(MiniConfig)
             )
         end)
     end
-
-    -- On release: either toggle UI (clean click) or just stop dragging
-    UserInputService.InputEnded:Connect(function(input)
-        if not isPressed then return end
-        if input.UserInputType ~= Enum.UserInputType.MouseButton1
-        and input.UserInputType ~= Enum.UserInputType.Touch then return end
-
-        local wasDrag = hasDragged
-        isPressed       = false
-        hasDragged      = false
-        pressStart      = nil
-        dragStartAbsPos = nil
-
-        if not wasDrag then
-            -- Clean click: pulse animation then toggle
-            TweenService:Create(holder,
-                TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                { Size = UDim2.fromOffset(30, 30) }):Play()
-            task.delay(0.08, function()
-                TweenService:Create(holder,
-                    TweenInfo.new(0.1, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-                    { Size = btnSize }):Play()
-            end)
-            Root.Enabled = not Root.Enabled
-        end
-    end)
 
     self.Minimizer = holder
     return holder
@@ -1178,7 +1157,6 @@ function Library:AddWindow(title, options)
                 task.wait(1.2)
             end
         end)
-
     end
 
     local resizer    = win:WaitForChild("Resizer")
@@ -1202,7 +1180,7 @@ function Library:AddWindow(title, options)
             win.Draggable = true
         end)
 
-        local mouseDown     = false
+        local mouseDown = false
         local resizeConn
 
         UserInputService.InputBegan:Connect(function(input)
@@ -1294,7 +1272,6 @@ function Library:AddWindow(title, options)
         end
 
         local function selectTab(tabBtn, contentFrame)
-            -- Deselect previous
             if activeBtn and activeBtn ~= tabBtn then
                 activeBtn.TextColor3 = Color3.fromRGB(160, 160, 160)
                 activeBtn.BackgroundColor3 = Color3.fromRGB(60, 10, 130)
@@ -1305,14 +1282,12 @@ function Library:AddWindow(title, options)
                 if prevLine then prevLine.BackgroundTransparency = 1 end
             end
 
-            -- Hide all content frames
             for _, child in ipairs(tabsFrame:GetChildren()) do
                 if child:IsA("Frame") then child.Visible = false end
             end
 
             activeBtn = tabBtn
 
-            -- Highlight: purple fill + bright white text + bottom accent line
             tabBtn.BackgroundColor3 = Color3.fromRGB(100, 20, 200)
             TweenService:Create(tabBtn,
                 TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
@@ -1341,24 +1316,20 @@ function Library:AddWindow(title, options)
             tabBtn.TextSize         = 13
             tabBtn.Font             = Enum.Font.FredokaOne
 
-            -- Hide the ImageLabel bg (we use BackgroundColor3 directly)
             local tabBtnBg = tabBtn:GetChildren()[1]
             tabBtnBg.ZIndex            = tabBtn.ZIndex + windowCount * 10
             tabBtnBg.ImageTransparency = 1
 
-            -- Rounded corners
             local tabBtnCorner        = Instance.new("UICorner")
             tabBtnCorner.CornerRadius = UDim.new(0, 5)
             tabBtnCorner.Parent       = tabBtn
 
-            -- Purple border stroke (always visible, shows the pill shape)
             local tabBtnStroke        = Instance.new("UIStroke")
             tabBtnStroke.Color        = Color3.fromRGB(120, 30, 220)
             tabBtnStroke.Thickness    = 1.5
             tabBtnStroke.Transparency = 0.2
             tabBtnStroke.Parent       = tabBtn
 
-            -- Bottom accent line (hidden until active)
             local activeLine              = Instance.new("Frame")
             activeLine.Name               = "ActiveLine"
             activeLine.Size               = UDim2.new(0.7, 0, 0, 2)
