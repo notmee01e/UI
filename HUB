@@ -71,7 +71,7 @@ PrefabLabel.BackgroundTransparency = 1
 PrefabLabel.Size                  = UDim2.new(0, 200, 0, 20)
 PrefabLabel.Font                  = Enum.Font.FredokaOne
 PrefabLabel.Text                  = "Hello, world 123"
-PrefabLabel.TextColor3            = Color3.new(1, 1, 1)
+PrefabLabel.TextColor3            = Color3.fromRGB(230, 200, 255)
 PrefabLabel.TextSize              = 16
 PrefabLabel.TextXAlignment        = Enum.TextXAlignment.Left
 
@@ -117,7 +117,7 @@ PrefabBarToggle.BackgroundTransparency = 1
 PrefabBarToggle.Position              = UDim2.new(0, 5, 0, -2)
 PrefabBarToggle.Size                  = UDim2.new(0, 20, 0, 20)
 PrefabBarToggle.ZIndex                = 2
-PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=100445510581838"
+PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=98003173280742"
 
 local PrefabBarBase = Instance.new("ImageLabel")
 PrefabBarBase.Name             = "Base"
@@ -270,7 +270,7 @@ PrefabSliderTitle.Size                  = UDim2.new(0, 0, 0, 20)
 PrefabSliderTitle.ZIndex                = 2
 PrefabSliderTitle.Font                  = Enum.Font.FredokaOne
 PrefabSliderTitle.Text                  = "Slider"
-PrefabSliderTitle.TextColor3            = Color3.new(0.784314, 0.784314, 0.784314)
+PrefabSliderTitle.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabSliderTitle.TextSize              = 14
 
 local PrefabSliderFill = Instance.new("ImageLabel")
@@ -293,7 +293,7 @@ PrefabSliderValue.Position              = UDim2.new(1, -55, 0.5, -10)
 PrefabSliderValue.Size                  = UDim2.new(0, 50, 0, 20)
 PrefabSliderValue.Font                  = Enum.Font.FredokaOne
 PrefabSliderValue.Text                  = "0%"
-PrefabSliderValue.TextColor3            = Color3.new(0.784314, 0.784314, 0.784314)
+PrefabSliderValue.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabSliderValue.TextSize              = 14
 
 local PrefabDropdown = Instance.new("TextButton")
@@ -306,7 +306,7 @@ PrefabDropdown.Size                  = UDim2.new(0, 200, 0, 20)
 PrefabDropdown.ZIndex                = 2
 PrefabDropdown.Font                  = Enum.Font.FredokaOne
 PrefabDropdown.Text                  = "      Dropdown"
-PrefabDropdown.TextColor3            = Color3.new(0.784314, 0.784314, 0.784314)
+PrefabDropdown.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabDropdown.TextSize              = 14
 PrefabDropdown.TextXAlignment        = Enum.TextXAlignment.Left
 
@@ -407,7 +407,7 @@ PrefabFolderButton.Size             = UDim2.new(1, 0, 0, 20)
 PrefabFolderButton.ZIndex           = 2
 PrefabFolderButton.Font             = Enum.Font.FredokaOne
 PrefabFolderButton.Text             = "      Folder"
-PrefabFolderButton.TextColor3       = Color3.new(1, 1, 1)
+PrefabFolderButton.TextColor3       = Color3.fromRGB(230, 200, 255)
 PrefabFolderButton.TextSize         = 14
 PrefabFolderButton.TextXAlignment   = Enum.TextXAlignment.Left
 
@@ -492,7 +492,7 @@ PrefabSwitchTitle.Position              = UDim2.new(1.2, 0, 0, 0)
 PrefabSwitchTitle.Size                  = UDim2.new(0, 20, 0, 20)
 PrefabSwitchTitle.Font                  = Enum.Font.FredokaOne
 PrefabSwitchTitle.Text                  = "Switch"
-PrefabSwitchTitle.TextColor3            = Color3.new(0.784314, 0.784314, 0.784314)
+PrefabSwitchTitle.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabSwitchTitle.TextSize              = 14
 PrefabSwitchTitle.TextXAlignment        = Enum.TextXAlignment.Left
 
@@ -528,7 +528,7 @@ PrefabDropdownItem.Size             = UDim2.new(1, 0, 0, 20)
 PrefabDropdownItem.ZIndex           = 3
 PrefabDropdownItem.Font             = Enum.Font.FredokaOne
 PrefabDropdownItem.Text             = "      Button"
-PrefabDropdownItem.TextColor3       = Color3.new(0.784314, 0.784314, 0.784314)
+PrefabDropdownItem.TextColor3       = Color3.fromRGB(220, 190, 255)
 PrefabDropdownItem.TextSize         = 14
 PrefabDropdownItem.TextXAlignment   = Enum.TextXAlignment.Left
 
@@ -551,7 +551,7 @@ PrefabKeybindTitle.BackgroundTransparency = 1
 PrefabKeybindTitle.Size                  = UDim2.new(0, 0, 1, 0)
 PrefabKeybindTitle.Font                  = Enum.Font.FredokaOne
 PrefabKeybindTitle.Text                  = "Keybind"
-PrefabKeybindTitle.TextColor3            = Color3.new(0.784314, 0.784314, 0.784314)
+PrefabKeybindTitle.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabKeybindTitle.TextSize              = 14
 PrefabKeybindTitle.TextXAlignment        = Enum.TextXAlignment.Left
 
@@ -566,7 +566,7 @@ PrefabKeybindInput.Size                  = UDim2.new(0, 80, 1, -4)
 PrefabKeybindInput.ZIndex                = 2
 PrefabKeybindInput.Font                  = Enum.Font.FredokaOne
 PrefabKeybindInput.Text                  = "RShift"
-PrefabKeybindInput.TextColor3            = Color3.new(0.784314, 0.784314, 0.784314)
+PrefabKeybindInput.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabKeybindInput.TextSize              = 12
 PrefabKeybindInput.TextWrapped           = true
 
@@ -1131,6 +1131,7 @@ function Library:AddWindow(title, options)
         win.ImageTransparency = options.background_transparency
         applyColor(win, options.background, 45)
 
+        -- ── Animated glowing border stroke ──────────────────
         local glowStroke        = Instance.new("UIStroke")
         glowStroke.Color        = Color3.fromRGB(180, 90, 255)
         glowStroke.Thickness    = 2.5
@@ -1155,6 +1156,106 @@ function Library:AddWindow(title, options)
                     TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
                     { Color = Color3.fromRGB(75, 10, 175), Transparency = 0.5 }):Play()
                 task.wait(1.2)
+            end
+        end)
+
+        -- ── Purple glow orbs in background ──────────────────
+        local bgGlow = Instance.new("Frame")
+        bgGlow.Name                   = "BgGlow"
+        bgGlow.Parent                 = win
+        bgGlow.Size                   = UDim2.new(1, 0, 1, 0)
+        bgGlow.Position               = UDim2.new(0, 0, 0, 0)
+        bgGlow.BackgroundTransparency = 1
+        bgGlow.BorderSizePixel        = 0
+        bgGlow.ZIndex                 = win.ZIndex + 1
+        bgGlow.ClipsDescendants       = true
+
+        local orb1 = Instance.new("ImageLabel")
+        orb1.Parent                 = bgGlow
+        orb1.BackgroundTransparency = 1
+        orb1.Image                  = "rbxassetid://266543268"
+        orb1.ImageColor3            = Color3.fromRGB(130, 40, 220)
+        orb1.ImageTransparency      = 0.55
+        orb1.Size                   = UDim2.fromOffset(220, 220)
+        orb1.Position               = UDim2.new(0, -60, 0, 10)
+        orb1.ZIndex                 = win.ZIndex + 1
+
+        local orb2 = Instance.new("ImageLabel")
+        orb2.Parent                 = bgGlow
+        orb2.BackgroundTransparency = 1
+        orb2.Image                  = "rbxassetid://266543268"
+        orb2.ImageColor3            = Color3.fromRGB(90, 20, 180)
+        orb2.ImageTransparency      = 0.6
+        orb2.Size                   = UDim2.fromOffset(180, 180)
+        orb2.Position               = UDim2.new(1, -120, 1, -130)
+        orb2.ZIndex                 = win.ZIndex + 1
+
+        local orb3 = Instance.new("ImageLabel")
+        orb3.Parent                 = bgGlow
+        orb3.BackgroundTransparency = 1
+        orb3.Image                  = "rbxassetid://266543268"
+        orb3.ImageColor3            = Color3.fromRGB(180, 80, 255)
+        orb3.ImageTransparency      = 0.75
+        orb3.Size                   = UDim2.fromOffset(140, 140)
+        orb3.Position               = UDim2.new(0.5, -70, 0.45, -70)
+        orb3.ZIndex                 = win.ZIndex + 1
+
+        task.spawn(function()
+            while orb1 and orb1.Parent do
+                TweenService:Create(orb1, TweenInfo.new(2.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { ImageTransparency = 0.3, ImageColor3 = Color3.fromRGB(160, 60, 255) }):Play()
+                TweenService:Create(orb2, TweenInfo.new(2.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { ImageTransparency = 0.4, ImageColor3 = Color3.fromRGB(110, 30, 200) }):Play()
+                TweenService:Create(orb3, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { ImageTransparency = 0.5, ImageColor3 = Color3.fromRGB(220, 110, 255) }):Play()
+                task.wait(2.5)
+                TweenService:Create(orb1, TweenInfo.new(2.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { ImageTransparency = 0.65, ImageColor3 = Color3.fromRGB(100, 20, 180) }):Play()
+                TweenService:Create(orb2, TweenInfo.new(2.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { ImageTransparency = 0.72, ImageColor3 = Color3.fromRGB(70, 10, 150) }):Play()
+                TweenService:Create(orb3, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    { ImageTransparency = 0.82, ImageColor3 = Color3.fromRGB(150, 50, 230) }):Play()
+                task.wait(2.5)
+            end
+        end)
+
+        -- ── Sweeping scan-line (top to bottom) ──────────────
+        local scanLine = Instance.new("Frame")
+        scanLine.Name                   = "ScanLine"
+        scanLine.Parent                 = win
+        scanLine.Size                   = UDim2.new(1, 0, 0, 2)
+        scanLine.Position               = UDim2.new(0, 0, 0, 26)
+        scanLine.BackgroundColor3       = Color3.fromRGB(200, 100, 255)
+        scanLine.BackgroundTransparency = 0.5
+        scanLine.BorderSizePixel        = 0
+        scanLine.ZIndex                 = win.ZIndex + 3
+
+        local scanCorner = Instance.new("UICorner")
+        scanCorner.CornerRadius = UDim.new(1, 0)
+        scanCorner.Parent       = scanLine
+
+        local scanGrad = Instance.new("UIGradient")
+        scanGrad.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0,   1),
+            NumberSequenceKeypoint.new(0.15, 0),
+            NumberSequenceKeypoint.new(0.85, 0),
+            NumberSequenceKeypoint.new(1,   1),
+        })
+        scanGrad.Parent = scanLine
+
+        task.spawn(function()
+            while scanLine and scanLine.Parent do
+                local winH = win.AbsoluteSize.Y
+                scanLine.Position               = UDim2.new(0, 0, 0, 28)
+                scanLine.BackgroundTransparency = 0.4
+                TweenService:Create(scanLine,
+                    TweenInfo.new(4, Enum.EasingStyle.Linear),
+                    { Position = UDim2.new(0, 0, 0, winH - 8), BackgroundTransparency = 0.7 }):Play()
+                task.wait(4)
+                TweenService:Create(scanLine,
+                    TweenInfo.new(0.25, Enum.EasingStyle.Quad),
+                    { BackgroundTransparency = 1 }):Play()
+                task.wait(1.5)
             end
         end)
     end
