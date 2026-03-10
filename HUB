@@ -1158,106 +1158,6 @@ function Library:AddWindow(title, options)
                 task.wait(1.2)
             end
         end)
-
-        -- ── Purple glow orbs in background ──────────────────
-        local bgGlow = Instance.new("Frame")
-        bgGlow.Name                   = "BgGlow"
-        bgGlow.Parent                 = win
-        bgGlow.Size                   = UDim2.new(1, 0, 1, 0)
-        bgGlow.Position               = UDim2.new(0, 0, 0, 0)
-        bgGlow.BackgroundTransparency = 1
-        bgGlow.BorderSizePixel        = 0
-        bgGlow.ZIndex                 = win.ZIndex + 1
-        bgGlow.ClipsDescendants       = true
-
-        local orb1 = Instance.new("ImageLabel")
-        orb1.Parent                 = bgGlow
-        orb1.BackgroundTransparency = 1
-        orb1.Image                  = "rbxassetid://266543268"
-        orb1.ImageColor3            = Color3.fromRGB(130, 40, 220)
-        orb1.ImageTransparency      = 0.55
-        orb1.Size                   = UDim2.fromOffset(220, 220)
-        orb1.Position               = UDim2.new(0, -60, 0, 10)
-        orb1.ZIndex                 = win.ZIndex + 1
-
-        local orb2 = Instance.new("ImageLabel")
-        orb2.Parent                 = bgGlow
-        orb2.BackgroundTransparency = 1
-        orb2.Image                  = "rbxassetid://266543268"
-        orb2.ImageColor3            = Color3.fromRGB(90, 20, 180)
-        orb2.ImageTransparency      = 0.6
-        orb2.Size                   = UDim2.fromOffset(180, 180)
-        orb2.Position               = UDim2.new(1, -120, 1, -130)
-        orb2.ZIndex                 = win.ZIndex + 1
-
-        local orb3 = Instance.new("ImageLabel")
-        orb3.Parent                 = bgGlow
-        orb3.BackgroundTransparency = 1
-        orb3.Image                  = "rbxassetid://266543268"
-        orb3.ImageColor3            = Color3.fromRGB(180, 80, 255)
-        orb3.ImageTransparency      = 0.75
-        orb3.Size                   = UDim2.fromOffset(140, 140)
-        orb3.Position               = UDim2.new(0.5, -70, 0.45, -70)
-        orb3.ZIndex                 = win.ZIndex + 1
-
-        task.spawn(function()
-            while orb1 and orb1.Parent do
-                TweenService:Create(orb1, TweenInfo.new(2.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { ImageTransparency = 0.3, ImageColor3 = Color3.fromRGB(160, 60, 255) }):Play()
-                TweenService:Create(orb2, TweenInfo.new(2.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { ImageTransparency = 0.4, ImageColor3 = Color3.fromRGB(110, 30, 200) }):Play()
-                TweenService:Create(orb3, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { ImageTransparency = 0.5, ImageColor3 = Color3.fromRGB(220, 110, 255) }):Play()
-                task.wait(2.5)
-                TweenService:Create(orb1, TweenInfo.new(2.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { ImageTransparency = 0.65, ImageColor3 = Color3.fromRGB(100, 20, 180) }):Play()
-                TweenService:Create(orb2, TweenInfo.new(2.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { ImageTransparency = 0.72, ImageColor3 = Color3.fromRGB(70, 10, 150) }):Play()
-                TweenService:Create(orb3, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    { ImageTransparency = 0.82, ImageColor3 = Color3.fromRGB(150, 50, 230) }):Play()
-                task.wait(2.5)
-            end
-        end)
-
-        -- ── Sweeping scan-line (top to bottom) ──────────────
-        local scanLine = Instance.new("Frame")
-        scanLine.Name                   = "ScanLine"
-        scanLine.Parent                 = win
-        scanLine.Size                   = UDim2.new(1, 0, 0, 2)
-        scanLine.Position               = UDim2.new(0, 0, 0, 26)
-        scanLine.BackgroundColor3       = Color3.fromRGB(200, 100, 255)
-        scanLine.BackgroundTransparency = 0.5
-        scanLine.BorderSizePixel        = 0
-        scanLine.ZIndex                 = win.ZIndex + 3
-
-        local scanCorner = Instance.new("UICorner")
-        scanCorner.CornerRadius = UDim.new(1, 0)
-        scanCorner.Parent       = scanLine
-
-        local scanGrad = Instance.new("UIGradient")
-        scanGrad.Transparency = NumberSequence.new({
-            NumberSequenceKeypoint.new(0,   1),
-            NumberSequenceKeypoint.new(0.15, 0),
-            NumberSequenceKeypoint.new(0.85, 0),
-            NumberSequenceKeypoint.new(1,   1),
-        })
-        scanGrad.Parent = scanLine
-
-        task.spawn(function()
-            while scanLine and scanLine.Parent do
-                local winH = win.AbsoluteSize.Y
-                scanLine.Position               = UDim2.new(0, 0, 0, 28)
-                scanLine.BackgroundTransparency = 0.4
-                TweenService:Create(scanLine,
-                    TweenInfo.new(4, Enum.EasingStyle.Linear),
-                    { Position = UDim2.new(0, 0, 0, winH - 8), BackgroundTransparency = 0.7 }):Play()
-                task.wait(4)
-                TweenService:Create(scanLine,
-                    TweenInfo.new(0.25, Enum.EasingStyle.Quad),
-                    { BackgroundTransparency = 1 }):Play()
-                task.wait(1.5)
-            end
-        end)
     end
 
     local resizer    = win:WaitForChild("Resizer")
@@ -1381,6 +1281,18 @@ function Library:AddWindow(title, options)
                     { BackgroundTransparency = 1 }):Play()
                 local prevLine = activeBtn:FindFirstChild("ActiveLine")
                 if prevLine then prevLine.BackgroundTransparency = 1 end
+                -- Remove glow border from previous tab
+                local prevStroke = activeBtn:FindFirstChild("ActiveStroke")
+                if prevStroke then
+                    TweenService:Create(prevStroke,
+                        TweenInfo.new(0.2, Enum.EasingStyle.Quad),
+                        { Transparency = 1 }):Play()
+                    task.delay(0.2, function()
+                        if prevStroke and prevStroke.Parent then prevStroke:Destroy() end
+                    end)
+                end
+                local prevCornerGlow = activeBtn:FindFirstChild("CornerGlow")
+                if prevCornerGlow then prevCornerGlow:Destroy() end
             end
 
             for _, child in ipairs(tabsFrame:GetChildren()) do
@@ -1397,6 +1309,109 @@ function Library:AddWindow(title, options)
 
             local activeLine = tabBtn:FindFirstChild("ActiveLine")
             if activeLine then activeLine.BackgroundTransparency = 0 end
+
+            -- ✦ Add glowing crystal border around active tab
+            local existingStroke = tabBtn:FindFirstChild("ActiveStroke")
+            if not existingStroke then
+                local activeStroke        = Instance.new("UIStroke")
+                activeStroke.Name         = "ActiveStroke"
+                activeStroke.Color        = Color3.fromRGB(200, 100, 255)
+                activeStroke.Thickness    = 2
+                activeStroke.Transparency = 1
+                activeStroke.Parent       = tabBtn
+
+                -- Fade in the stroke
+                TweenService:Create(activeStroke,
+                    TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    { Transparency = 0 }):Play()
+
+                -- Pulse it continuously while active
+                task.spawn(function()
+                    local pulseColors = {
+                        Color3.fromRGB(220, 130, 255),
+                        Color3.fromRGB(255, 200, 255),
+                        Color3.fromRGB(160,  60, 255),
+                        Color3.fromRGB(240, 170, 255),
+                    }
+                    local idx = 1
+                    while activeStroke and activeStroke.Parent and activeBtn == tabBtn do
+                        idx = (idx % #pulseColors) + 1
+                        TweenService:Create(activeStroke,
+                            TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                            { Color = pulseColors[idx], Transparency = 0.0, Thickness = 2.5 }):Play()
+                        task.wait(0.7)
+                        TweenService:Create(activeStroke,
+                            TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                            { Color = Color3.fromRGB(130, 40, 220), Transparency = 0.3, Thickness = 1.5 }):Play()
+                        task.wait(0.7)
+                    end
+                end)
+
+                -- 4 corner crystal dots (top-left, top-right, bottom-left, bottom-right)
+                local cornerPositions = {
+                    { x = 0, y = 0,   ax = 0.5, ay = 0.5 },
+                    { x = 1, y = 0,   ax = 0.5, ay = 0.5 },
+                    { x = 0, y = 1,   ax = 0.5, ay = 0.5 },
+                    { x = 1, y = 1,   ax = 0.5, ay = 0.5 },
+                }
+                for _, cp in ipairs(cornerPositions) do
+                    -- Cross star at each corner
+                    local dot = Instance.new("Frame")
+                    dot.Name                   = "CornerGlow"
+                    dot.Parent                 = tabBtn
+                    dot.BackgroundTransparency = 1
+                    dot.BorderSizePixel        = 0
+                    dot.Size                   = UDim2.fromOffset(5, 5)
+                    dot.AnchorPoint            = Vector2.new(cp.ax, cp.ay)
+                    dot.Position               = UDim2.new(cp.x, 0, cp.y, 0)
+                    dot.ZIndex                 = tabBtn.ZIndex + 6
+
+                    local hBar = Instance.new("Frame")
+                    hBar.Parent               = dot
+                    hBar.BackgroundColor3     = Color3.fromRGB(255, 220, 255)
+                    hBar.BackgroundTransparency = 0
+                    hBar.BorderSizePixel      = 0
+                    hBar.Size                 = UDim2.new(1, 0, 0, 1)
+                    hBar.AnchorPoint          = Vector2.new(0, 0.5)
+                    hBar.Position             = UDim2.new(0, 0, 0.5, 0)
+                    hBar.ZIndex               = dot.ZIndex
+                    Instance.new("UICorner", hBar).CornerRadius = UDim.new(1, 0)
+
+                    local vBar = Instance.new("Frame")
+                    vBar.Parent               = dot
+                    vBar.BackgroundColor3     = Color3.fromRGB(255, 220, 255)
+                    vBar.BackgroundTransparency = 0
+                    vBar.BorderSizePixel      = 0
+                    vBar.Size                 = UDim2.new(0, 1, 1, 0)
+                    vBar.AnchorPoint          = Vector2.new(0.5, 0)
+                    vBar.Position             = UDim2.new(0.5, 0, 0, 0)
+                    vBar.ZIndex               = dot.ZIndex
+                    Instance.new("UICorner", vBar).CornerRadius = UDim.new(1, 0)
+
+                    -- Pulse corner dots in/out
+                    task.spawn(function()
+                        while dot and dot.Parent and activeBtn == tabBtn do
+                            TweenService:Create(dot,
+                                TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                                { Size = UDim2.fromOffset(7, 7) }):Play()
+                            TweenService:Create(hBar, TweenInfo.new(0.5, Enum.EasingStyle.Sine),
+                                { BackgroundColor3 = Color3.fromRGB(220, 150, 255), BackgroundTransparency = 0 }):Play()
+                            TweenService:Create(vBar, TweenInfo.new(0.5, Enum.EasingStyle.Sine),
+                                { BackgroundColor3 = Color3.fromRGB(220, 150, 255), BackgroundTransparency = 0 }):Play()
+                            task.wait(0.5)
+                            TweenService:Create(dot,
+                                TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                                { Size = UDim2.fromOffset(4, 4) }):Play()
+                            TweenService:Create(hBar, TweenInfo.new(0.5, Enum.EasingStyle.Sine),
+                                { BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 0.3 }):Play()
+                            TweenService:Create(vBar, TweenInfo.new(0.5, Enum.EasingStyle.Sine),
+                                { BackgroundColor3 = Color3.fromRGB(255, 255, 255), BackgroundTransparency = 0.3 }):Play()
+                            task.wait(0.5)
+                        end
+                        if dot and dot.Parent then dot:Destroy() end
+                    end)
+                end
+            end
 
             contentFrame.Visible = true
         end
