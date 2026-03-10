@@ -1,4 +1,11 @@
+-- ╔══════════════════════════════════════════════════════════╗
+-- ║          ⚡ VIOLET THUNDER UI LIBRARY ⚡                  ║
+-- ║       Animated • Glowing • Thunder-Themed               ║
+-- ╚══════════════════════════════════════════════════════════╝
 
+--// ─────────────────────────────────────────────────────────
+--//  🎨 VIOLET THUNDER THEME CONFIGURATION
+--// ─────────────────────────────────────────────────────────
 local Config = {
     main_color  = Color3.fromRGB(150, 60, 255),
     min_size    = Vector2.new(420, 320),
@@ -62,10 +69,10 @@ PrefabLabel.Parent                = Prefabs
 PrefabLabel.BackgroundColor3      = Color3.new(1, 1, 1)
 PrefabLabel.BackgroundTransparency = 1
 PrefabLabel.Size                  = UDim2.new(0, 200, 0, 20)
-PrefabLabel.Font                  = Enum.Font.FredokaOne
+PrefabLabel.Font                  = Enum.Font.GothamBold
 PrefabLabel.Text                  = "Hello, world 123"
 PrefabLabel.TextColor3            = Color3.fromRGB(230, 200, 255)
-PrefabLabel.TextSize              = 16
+PrefabLabel.TextSize              = 14
 PrefabLabel.TextXAlignment        = Enum.TextXAlignment.Left
 
 --// ─────── Prefab: Window ───────────────────────────────────
@@ -110,7 +117,7 @@ PrefabBarToggle.BackgroundTransparency = 1
 PrefabBarToggle.Position              = UDim2.new(0, 5, 0, -2)
 PrefabBarToggle.Size                  = UDim2.new(0, 20, 0, 20)
 PrefabBarToggle.ZIndex                = 2
-PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=104874871395979"
+PrefabBarToggle.Image                 = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=98003173280742"
 
 local PrefabBarBase = Instance.new("ImageLabel")
 PrefabBarBase.Name             = "Base"
@@ -152,10 +159,10 @@ PrefabWindowTitle.BackgroundColor3      = Color3.new(1, 1, 1)
 PrefabWindowTitle.BackgroundTransparency = 1
 PrefabWindowTitle.Position              = UDim2.new(0, 30, 0, 3)
 PrefabWindowTitle.Size                  = UDim2.new(0, 200, 0, 20)
-PrefabWindowTitle.Font                  = Enum.Font.FredokaOne
+PrefabWindowTitle.Font                  = Enum.Font.GothamBold
 PrefabWindowTitle.Text                  = "Gamer Time"
 PrefabWindowTitle.TextColor3            = Color3.new(1, 1, 1)
-PrefabWindowTitle.TextSize              = 16
+PrefabWindowTitle.TextSize              = 15
 PrefabWindowTitle.TextXAlignment        = Enum.TextXAlignment.Left
 
 local PrefabTabSelection = Instance.new("ImageLabel")
@@ -223,7 +230,7 @@ PrefabTextBox.BackgroundTransparency = 1
 PrefabTextBox.BorderSizePixel       = 0
 PrefabTextBox.Size                  = UDim2.new(1, 0, 0, 20)
 PrefabTextBox.ZIndex                = 2
-PrefabTextBox.Font                  = Enum.Font.FredokaOne
+PrefabTextBox.Font                  = Enum.Font.GothamBold
 PrefabTextBox.PlaceholderColor3     = Color3.new(0.698039, 0.698039, 0.698039)
 PrefabTextBox.PlaceholderText       = "Input Text"
 PrefabTextBox.Text                  = ""
@@ -261,7 +268,7 @@ PrefabSliderTitle.BackgroundTransparency = 1
 PrefabSliderTitle.Position              = UDim2.new(0.5, 0, 0.5, -10)
 PrefabSliderTitle.Size                  = UDim2.new(0, 0, 0, 20)
 PrefabSliderTitle.ZIndex                = 2
-PrefabSliderTitle.Font                  = Enum.Font.FredokaOne
+PrefabSliderTitle.Font                  = Enum.Font.GothamBold
 PrefabSliderTitle.Text                  = "Slider"
 PrefabSliderTitle.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabSliderTitle.TextSize              = 14
@@ -284,7 +291,7 @@ PrefabSliderValue.BackgroundColor3      = Color3.new(1, 1, 1)
 PrefabSliderValue.BackgroundTransparency = 1
 PrefabSliderValue.Position              = UDim2.new(1, -55, 0.5, -10)
 PrefabSliderValue.Size                  = UDim2.new(0, 50, 0, 20)
-PrefabSliderValue.Font                  = Enum.Font.FredokaOne
+PrefabSliderValue.Font                  = Enum.Font.GothamBold
 PrefabSliderValue.Text                  = "0%"
 PrefabSliderValue.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabSliderValue.TextSize              = 14
@@ -297,7 +304,7 @@ PrefabDropdown.BackgroundTransparency = 1
 PrefabDropdown.BorderSizePixel       = 0
 PrefabDropdown.Size                  = UDim2.new(0, 200, 0, 20)
 PrefabDropdown.ZIndex                = 2
-PrefabDropdown.Font                  = Enum.Font.FredokaOne
+PrefabDropdown.Font                  = Enum.Font.GothamBold
 PrefabDropdown.Text                  = "      Dropdown"
 PrefabDropdown.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabDropdown.TextSize              = 14
@@ -362,7 +369,7 @@ PrefabTabButton.BackgroundTransparency = 1
 PrefabTabButton.BorderSizePixel       = 0
 PrefabTabButton.Size                  = UDim2.new(0, 71, 0, 20)
 PrefabTabButton.ZIndex                = 2
-PrefabTabButton.Font                  = Enum.Font.FredokaOne
+PrefabTabButton.Font                  = Enum.Font.GothamBold
 PrefabTabButton.Text                  = "Test tab"
 PrefabTabButton.TextColor3            = Color3.new(0.784314, 0.784314, 0.784314)
 PrefabTabButton.TextSize              = 14
@@ -398,7 +405,7 @@ PrefabFolderButton.BackgroundTransparency = 1
 PrefabFolderButton.BorderSizePixel  = 0
 PrefabFolderButton.Size             = UDim2.new(1, 0, 0, 20)
 PrefabFolderButton.ZIndex           = 2
-PrefabFolderButton.Font             = Enum.Font.FredokaOne
+PrefabFolderButton.Font             = Enum.Font.GothamBold
 PrefabFolderButton.Text             = "      Folder"
 PrefabFolderButton.TextColor3       = Color3.fromRGB(230, 200, 255)
 PrefabFolderButton.TextSize         = 14
@@ -459,7 +466,7 @@ PrefabSwitch.BackgroundTransparency = 1
 PrefabSwitch.BorderSizePixel       = 0
 PrefabSwitch.Size                  = UDim2.new(0, 20, 0, 20)
 PrefabSwitch.ZIndex                = 2
-PrefabSwitch.Font                  = Enum.Font.SourceSans
+PrefabSwitch.Font                  = Enum.Font.Gotham
 PrefabSwitch.Text                  = ""
 PrefabSwitch.TextColor3            = Color3.new(1, 1, 1)
 PrefabSwitch.TextSize              = 14
@@ -483,7 +490,7 @@ PrefabSwitchTitle.BackgroundColor3      = Color3.new(1, 1, 1)
 PrefabSwitchTitle.BackgroundTransparency = 1
 PrefabSwitchTitle.Position              = UDim2.new(1.2, 0, 0, 0)
 PrefabSwitchTitle.Size                  = UDim2.new(0, 20, 0, 20)
-PrefabSwitchTitle.Font                  = Enum.Font.FredokaOne
+PrefabSwitchTitle.Font                  = Enum.Font.GothamBold
 PrefabSwitchTitle.Text                  = "Switch"
 PrefabSwitchTitle.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabSwitchTitle.TextSize              = 14
@@ -497,7 +504,7 @@ PrefabButton.BackgroundTransparency = 1
 PrefabButton.BorderSizePixel  = 0
 PrefabButton.Size             = UDim2.new(0, 91, 0, 20)
 PrefabButton.ZIndex           = 2
-PrefabButton.Font             = Enum.Font.FredokaOne
+PrefabButton.Font             = Enum.Font.GothamBold
 PrefabButton.TextColor3       = Color3.new(1, 1, 1)
 PrefabButton.TextSize         = 14
 
@@ -519,7 +526,7 @@ PrefabDropdownItem.BackgroundColor3 = Color3.fromRGB(22, 10, 45)
 PrefabDropdownItem.BorderSizePixel  = 0
 PrefabDropdownItem.Size             = UDim2.new(1, 0, 0, 20)
 PrefabDropdownItem.ZIndex           = 3
-PrefabDropdownItem.Font             = Enum.Font.FredokaOne
+PrefabDropdownItem.Font             = Enum.Font.GothamBold
 PrefabDropdownItem.Text             = "      Button"
 PrefabDropdownItem.TextColor3       = Color3.fromRGB(220, 190, 255)
 PrefabDropdownItem.TextSize         = 14
@@ -542,7 +549,7 @@ PrefabKeybindTitle.Parent                = PrefabKeybind
 PrefabKeybindTitle.BackgroundColor3      = Color3.new(1, 1, 1)
 PrefabKeybindTitle.BackgroundTransparency = 1
 PrefabKeybindTitle.Size                  = UDim2.new(0, 0, 1, 0)
-PrefabKeybindTitle.Font                  = Enum.Font.FredokaOne
+PrefabKeybindTitle.Font                  = Enum.Font.GothamBold
 PrefabKeybindTitle.Text                  = "Keybind"
 PrefabKeybindTitle.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabKeybindTitle.TextSize              = 14
@@ -557,7 +564,7 @@ PrefabKeybindInput.BorderSizePixel       = 0
 PrefabKeybindInput.Position              = UDim2.new(1, -85, 0, 2)
 PrefabKeybindInput.Size                  = UDim2.new(0, 80, 1, -4)
 PrefabKeybindInput.ZIndex                = 2
-PrefabKeybindInput.Font                  = Enum.Font.FredokaOne
+PrefabKeybindInput.Font                  = Enum.Font.GothamBold
 PrefabKeybindInput.Text                  = "RShift"
 PrefabKeybindInput.TextColor3            = Color3.fromRGB(220, 190, 255)
 PrefabKeybindInput.TextSize              = 12
@@ -1056,7 +1063,7 @@ function Library:AddWindow(title, options)
 
     local win = Prefabs:FindFirstChild("Window"):Clone()
     win.Parent = WindowsContainer
-    win:FindFirstChild("Title").Text = title
+    win:FindFirstChild("Title").Text = string.upper(title)
     win.Size   = UDim2.new(0, options.min_size.X, 0, options.min_size.Y)
     win.ZIndex = win.ZIndex + windowCount * 10
 
@@ -1416,14 +1423,14 @@ function Library:AddWindow(title, options)
 
             local tabBtn = Prefabs:FindFirstChild("TabButton"):Clone()
             tabBtn.Parent           = tabBtnsF
-            tabBtn.Text             = tabName
+            tabBtn.Text             = string.upper(tabName)
             tabBtn.Size             = UDim2.new(0, getTextWidth(tabBtn) + 20, 0, 18)
             tabBtn.ZIndex           = tabBtn.ZIndex + windowCount * 10
             tabBtn.BackgroundColor3 = Color3.fromRGB(60, 10, 130)
             tabBtn.BackgroundTransparency = 1
             tabBtn.TextColor3       = Color3.fromRGB(180, 140, 220)
             tabBtn.TextSize         = 13
-            tabBtn.Font             = Enum.Font.FredokaOne
+            tabBtn.Font             = Enum.Font.GothamBold
 
             local tabBtnBg = tabBtn:GetChildren()[1]
             tabBtnBg.ZIndex            = tabBtn.ZIndex + windowCount * 10
@@ -2184,3 +2191,22 @@ end)
 
 return Library
 
+--[[
+    ── USAGE EXAMPLE ────────────────────────────────────────
+
+    local win = Library:AddWindow("My Window")
+    local tab = win:AddTab("Main")
+    tab:AddButton("Click me", function() print("clicked") end)
+
+    -- Create the minimizer button (call AFTER AddWindow)
+    Library:CreateMinimizer({
+        -- All fields are optional:
+        Icon         = "rbxassetid://10734897102",  -- custom icon
+        Corner       = 14,          -- corner radius (px)
+        Transparency = 0,           -- button background transparency
+        Draggable    = true,         -- allow dragging the minimizer around
+        Size         = UDim2.fromOffset(36, 36),
+        Position     = UDim2.new(0, 300, 0, 20),
+        Visible      = true,
+    })
+]]
